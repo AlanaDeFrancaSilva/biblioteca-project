@@ -31,32 +31,39 @@ export default {
     };
   },
   methods: {
-    async handleLogin() {
-      try {
-        const response = await fetch('http://localhost:5000/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            email: this.email,
-            password: this.password
-          })
-        });
+  async handleLogin() {
+    try {
+      const response = await fetch('http://localhost:5000/api/usuarios/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: this.email,
+          password: this.password
+        })
+      });
 
-        const data = await response.json();
-        if (response.ok) {
-          console.log("Login:", data.message);
-          // Redirecionar ou armazenar o token de sessão, conforme necessário
-        } else {
-          console.error(data.message);
-          // Exibir mensagem de erro ao usuário
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("Tipo de usuário:", data.userType); // Verifica o tipo de usuário
+        if (data.userType === 'Professor' || data.userType === 'Aluno') {
+          console.log("Redirecionando para /books");
+          this.$router.push('/books');
+        } else if (data.userType === 'Bibliotecário') {
+          console.log("Redirecionando para /adminPanel");
+          this.$router.push('/adminPanel');
         }
-      } catch (error) {
-        console.error("Erro ao fazer login:", error);
+      } else {
+        console.error(data.message);
+        // Exibir mensagem de erro ao usuário
       }
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
     }
   }
+}
 };
 </script>
 

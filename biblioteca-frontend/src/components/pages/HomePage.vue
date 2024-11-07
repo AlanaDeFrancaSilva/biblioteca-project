@@ -7,7 +7,7 @@
         </div>
         <nav>
           <ul>
-            <li><router-link to="/books">Livros</router-link></li>
+            <li><router-link to="/livros">Livros</router-link></li>
             <li><router-link to="/noticias">Notícias</router-link></li>
             <li><router-link to="/sobre">Sobre</router-link></li>
             <li><a href="https://transparencia.sp.senai.br/sac" target="_blank">Fale Conosco</a></li>
