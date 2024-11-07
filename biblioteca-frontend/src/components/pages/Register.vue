@@ -1,4 +1,4 @@
-<template>
+<template> 
   <div>
     <header class="header_login">
       <img src="@/assets/logo.png" alt="Ícone Logo" class="icon-logo">
@@ -20,10 +20,12 @@
           <option value="Bibliotecário">Bibliotecário</option>
         </select>
 
+        <!-- Campo NIF, visível para Professor e Bibliotecário -->
         <div v-if="userType === 'Professor' || userType === 'Bibliotecário'" class="nif-field">
           <input type="text" v-model="nif" maxlength="7" placeholder="Digite seu NIF" @input="validateInput('nif')">
         </div>
 
+        <!-- Campo RM, visível para Aluno -->
         <div v-if="userType === 'Aluno'" class="rm-field">
           <input type="text" v-model="rm" maxlength="7" placeholder="Digite seu RM" @input="validateInput('rm')">
         </div>
@@ -83,25 +85,33 @@ export default {
     async handleRegister() {
       if (this.password !== this.confirmPassword) {
         this.errorMessage = 'As senhas não coincidem.';
-        return; // Adicione um return aqui para evitar o fluxo continuado
+        return; // Adiciona um return para evitar o fluxo continuado
       }
 
       this.errorMessage = '';
 
+      // Remover campos desnecessários antes de enviar os dados
+      let userData = {
+        name: this.name,
+        email: this.email,
+        userType: this.userType,
+        phone: this.phone,
+        password: this.password,
+      };
+
+      // Verificar tipo de usuário e incluir o campo correto
+      if (this.userType === 'Aluno') {
+        userData.rm = this.rm; // Apenas incluir o RM para alunos
+      } else if (this.userType === 'Professor' || this.userType === 'Bibliotecário') {
+        userData.nif = this.nif; // Apenas incluir o NIF para professores e bibliotecários
+      }
+
       try {
-        const response = await axios.post('http://localhost:5000/api/usuarios', {
-          name: this.name,
-          email: this.email,
-          userType: this.userType,
-          nif: this.nif,
-          rm: this.rm,
-          phone: this.phone,
-          password: this.password,
-        });
+        const response = await axios.post('http://localhost:5000/api/usuarios', userData);
 
         // Redirecionar com base no tipo de usuário
-        const createdUser = response.data; // Ajuste isso para o que seu servidor retorna
-        if (createdUser.userType === 'bibliotecario') {
+        const createdUser = response.data;
+        if (createdUser.userType === 'Bibliotecário') {
           this.$router.push('/dashboard');
         } else {
           this.$router.push('/bookslist');
@@ -111,18 +121,14 @@ export default {
       } catch (error) {
         console.error(error);
         if (error.response) {
-          // A requisição foi feita e o servidor respondeu com um código de status
-          // que não está na faixa de 2xx
-          console.error(error.response.data);
           this.errorMessage = error.response.data.message || 'Erro ao cadastrar, tente novamente.';
         } else {
-          // Algo aconteceu ao configurar a requisição que acionou um erro
           this.errorMessage = 'Erro ao cadastrar, tente novamente.';
         }
       }
     }
   }
-  };
+};
 </script>
 
 <style scoped>
