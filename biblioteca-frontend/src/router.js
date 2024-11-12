@@ -4,10 +4,9 @@ import Register from './components/pages/Register.vue';
 import AdminPanel from './components/pages/AdminPanel.vue';
 import Dashboard from './components/pages/Dashboard.vue';
 import HomePage from './components/pages/HomePage.vue';
-import BooksList from './components/pages/BooksList.vue';
-
-// ... (restante do código do router)
-
+import BooksHome from './components/pages/BooksHome.vue';
+import BookForm from './components/pages/BookForm.vue';
+import BookL from './components/pages/BookL.vue';
 
 const routes = [
   { path: '/login', component: LoginPage },
@@ -15,7 +14,9 @@ const routes = [
   { path: '/adminPanel', component: AdminPanel }, // Página de gerenciamento
   { path: '/dashboard', component: Dashboard }, // Página do dashboard
   { path: '/', component: HomePage }, // Página inicial
-  { path: '/books', component: BooksList },
+  { path: '/booksHome', component: BooksHome },
+  { path: '/bookForm', component: BookForm },
+  { path: '/booksList', component: BookL },
 ];
 
 const router = createRouter({

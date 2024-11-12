@@ -50,7 +50,7 @@ export default {
         console.log("Tipo de usuário:", data.userType); // Verifica o tipo de usuário
         if (data.userType === 'Professor' || data.userType === 'Aluno') {
           console.log("Redirecionando para /books");
-          this.$router.push('/books');
+          this.$router.push('/booksHome');
         } else if (data.userType === 'Bibliotecário') {
           console.log("Redirecionando para /adminPanel");
           this.$router.push('/adminPanel');
