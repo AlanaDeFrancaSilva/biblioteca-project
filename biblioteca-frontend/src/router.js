@@ -6,7 +6,7 @@ import Dashboard from './components/pages/Dashboard.vue';
 import HomePage from './components/pages/HomePage.vue';
 import BooksHome from './components/pages/BooksHome.vue';
 import BookForm from './components/pages/BookForm.vue';
-import BookL from './components/pages/BookL.vue';
+import BookL from './components/pages/BookList.vue';
 
 const routes = [
   { path: '/login', component: LoginPage },
