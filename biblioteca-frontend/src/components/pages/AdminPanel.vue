@@ -1,5 +1,6 @@
 <template>
   <div class="admin-panel">
+    
     <!-- Cabeçalho -->
     <header class="header-admin">
       <div class="header-left">
@@ -23,10 +24,10 @@
 
     <!-- Corpo -->
     <div class="main-content">
+
       <!-- Caixa principal com barra de pesquisa e botões -->
       <div class="main-box">
         <input type="text" placeholder="Pesquisar..." class="search-bar">
-        
         <div class="action-circles">
           <div class="circle new-book" @click="goToBookForm">
             <img src="@/assets/addition.png" alt="Novo livro">
@@ -73,6 +74,7 @@
           </div>
         </div>
       </div>
+
     </div>
 
     <!-- Rodapé -->
@@ -99,6 +101,7 @@
         </a>
       </div>
     </footer>
+
   </div>
 </template>
 
@@ -167,7 +170,7 @@ export default {
     },
     // Navega para a página de formulário de livro
     goToBookForm() {
-      this.$router.push('/api.js');  // Navega para a página /book-form
+      this.$router.push('/bookForm'); // Navega para a página /book-form
     },
   },
   mounted() {
@@ -177,8 +180,8 @@ export default {
 };
 </script>
 
-
 <style scoped>
+/* Cabeçalho */
 .header-admin {
   display: flex;
   justify-content: space-between;
@@ -226,6 +229,7 @@ export default {
   width: 120px;
 }
 
+/* Corpo */
 .main-content {
   display: flex;
   flex-direction: column;
@@ -237,10 +241,10 @@ export default {
   background-color: #f0f0f0;
   padding: 40px;
   width: 100%;
-  max-width: 1700px;  /* Aumenta a largura máxima */
+  max-width: 1700px;
   text-align: center;
   margin-bottom: 20px;
-  border-radius: 8px;  /* Adiciona bordas arredondadas com raio de 8px */
+  border-radius: 8px;
 }
 
 .search-bar {
@@ -251,11 +255,11 @@ export default {
 
 .action-circles {
   display: flex;
-  justify-content: center;  /* Alinha os círculos horizontalmente ao centro */
-  align-items: center;      /* Alinha os círculos verticalmente ao centro */
-  gap: 150px;                /* Ajuste o espaçamento entre os círculos, se necessário */
-  width: 100%;              /* Faz o container ocupar toda a largura da tela */
-  padding: 0;               /* Remover qualquer padding extra */
+  justify-content: center;
+  align-items: center;
+  gap: 150px;
+  width: 100%;
+  padding: 0;
 }
 
 .circle {
@@ -272,23 +276,23 @@ export default {
 }
 
 .circle p {
-  position: absolute; /* Coloca o texto fora do círculo */
-  bottom: -20px; /* Ajusta a posição para que o texto fique embaixo do círculo */
-  margin: 0; /* Remove qualquer margem extra */
+  position: absolute;
+  bottom: -20px;
+  margin: 0;
   font-size: 14px;
   color: #000000;
 }
 
 .circle.new-book {
-  background-color: #F4271C; /* Cor para o círculo 'Novo Livro' */
+  background-color: #F4271C;
 }
 
 .circle.users {
-  background-color: #2133B0; /* Cor para o círculo 'Usuários' */
+  background-color: #2133B0;
 }
 
 .circle.reports {
-  background-color: #3197A6; /* Cor para o círculo 'Relatórios' */
+  background-color: #3197A6;
 }
 
 .circle img {
@@ -296,6 +300,7 @@ export default {
   height: 40px;
 }
 
+/* Mini Dashboard */
 .mini-dashboard {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -350,13 +355,25 @@ export default {
 }
 
 .popular-books img {
-  width: 50px; /* Ajuste a largura conforme necessário */
-  height: auto; /* Mantém a proporção */
+  width: 50px;
+  height: auto;
 }
 
 .calendar-header img {
-  width: 20px; /* Ajuste a largura conforme necessário */
-  height: auto; /* Mantém a proporção */
+  width: 20px;
+  height: auto;
+}
+
+/* Rodapé */
+footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f9f9f9;
+  color: black;
+  padding: 15px 20px;
+  width: 100%;
+  clear: both;
 }
 
 .footer-esquerda, .footer-centro, .footer-direita {
@@ -366,52 +383,26 @@ export default {
   padding: 10px;
 }
 
-/* Rodapé */
-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f9f9f9; /* cor fundo para o rodapé */
-    color: black;
-    padding: 15px 20px;
-    width: 100%;
-    clear: both; /* Adiciona essa linha para garantir que o rodapé fique abaixo do conteúdo */
-}
-
-/* Adiciona essa classe ao elemento que contém o conteúdo da página */
-.container {
-    min-height: 100vh; /* Ajusta a altura mínima do conteúdo para a altura da página */
-    margin-bottom: 60px; /* Adiciona um espaçamento de 60px no final do conteúdo para o rodapé */
-}
-
-.footer-esquerda {
-    display: flex;
-    align-items: center;
-}
-
 .footer-esquerda img {
-    height: 20px; /* Define a altura das imagens para 25 pixels, garantindo uma aparência consistente */
-    margin-right: 10px; /* Adiciona uma margem de 10 pixels à direita das imagens para espaçamento entre elementos */
+  height: 20px;
+  margin-right: 10px;
 }
 
 .footer-centro {
-    text-align: center;
-    flex-grow: 1;
+  text-align: center;
+  flex-grow: 1;
 }
 
-/* Define a largura da .footer-direita */
 .footer-direita {
-    display: flex;
-    justify-content: space-around;
-    width: 110px; /* Mantém a largura da .footer-direita em 100px */
-    gap: 0.5px; /* Adiciona um espaçamento de 10px entre as imagens */
-    overflow: visible; /* Define como o conteúdo deve ser tratado quando ultrapassa a largura da página */
+  display: flex;
+  justify-content: space-around;
+  width: 110px;
+  gap: 0.5px;
+  overflow: visible;
 }
 
-/* Define o estilo para as imagens dentro da .footer-direita */
 .footer-direita img {
-    height: 20px; /* Define a altura das imagens */
-    margin: 0 5px; /* Adiciona um espaçamento de 5px à esquerda e à direita das imagens */
+  height: 20px;
+  margin: 0 5px;
 }
-
 </style>

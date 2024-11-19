@@ -1,25 +1,36 @@
-import axios from 'axios'; // Importa Axios para requisição HTTP
+// src/services/api.js
 
-// Cria instâcia do Axios com URL base da API
-const apiClient = axios.create({
-    baseURL: 'http://localhost:5000/api/booksRoutes', // URL da API
-    headers: {
-        'Content-Type': 'application/json', // Define JSON como tipo de conteúdo
-    },
+import axios from 'axios';
+
+// Criação da instância do Axios com configurações padrão
+const api = axios.create({
+  baseURL: 'http://localhost:5000/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
-// Expota função CRUD usando Axios
-export default{
-    getBooks(){
-        return apiClient.get('/'); // GET para listar os livros 
-    },
-    addBook(book){
-        return apiClient.post('/', book); // POST para adicionar livro
-    },
-    updateBook(id, book){
-        return apiClient.put(`/${id}`, book); // PUT para atualizar livro pelo ID
-    },
-    deleteBook(id){
-        return apiClient.delete(`/${id}`); // DELETE para excluir livro pelo ID
-    }
-}
+// Funções de API para interagir com o backend
+const getBooks = () => {
+  return api.get('/livros');
+};
+
+const addBook = (bookData) => {
+  return api.post('/livros', bookData);
+};
+
+const updateBook = (id, bookData) => {
+  return api.put(`/livros/${id}`, bookData);
+};
+
+const deleteBook = (id) => {
+  return api.delete(`/livros/${id}`);
+};
+
+// Exportando a instância do Axios configurada e as funções de API
+export default {
+  getBooks,
+  addBook,
+  updateBook,
+  deleteBook,
+};

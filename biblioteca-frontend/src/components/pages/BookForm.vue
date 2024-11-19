@@ -1,102 +1,183 @@
 <template>
-  <div class="bookform-container">
+  <div class="book-form">
+    <h1>Gerenciamento de Livros</h1>
+    
+    <!-- Exibir mensagem de erro caso haja algum erro -->
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+
     <form @submit.prevent="handleSubmit">
-      <input v-model="book.title" placeholder="Título" required />
-      <input v-model="book.author" placeholder="Autor" required />
-      <input v-model="book.year" placeholder="Ano" required />
-      <button type="submit">{{ book._id ? 'Atualizar' : 'Adicionar' }}</button>
+      <label for="title">Título</label>
+      <input v-model="form.title" id="title" required />
+
+      <label for="author">Autor</label>
+      <input v-model="form.author" id="author" required />
+
+      <label for="rating">Avaliação</label>
+      <StarRating :rating="form.rating" @update:rating="updateRating" />
+
+      <label for="available">Disponibilidade</label>
+      <select v-model="form.available" id="available">
+        <option :value="true">Disponível</option>
+        <option :value="false">Indisponível</option>
+      </select>
+
+      <button type="submit" :disabled="isSubmitting">{{ isEditing ? 'Atualizar' : 'Adicionar' }} Livro</button>
     </form>
+
+    <h2>Lista de Livros</h2>
+    <ul>
+      <li v-for="book in books" :key="book._id">
+        {{ book.title }} - {{ book.author }} ({{ book.rating }} estrelas) -
+        <span>{{ book.available ? 'Disponível' : 'Indisponível' }}</span>
+        <button @click="editBook(book)">Editar</button>
+        <button @click="deleteBook(book._id)">Excluir</button>
+      </li>
+    </ul>
+
+    <!-- Exibição do carregamento -->
+    <div v-if="isLoading">Carregando...</div>
   </div>
 </template>
 
 <script>
-import api from '@/services/api'; // Importa o serviço API para fazer requisições
+import api from '@/services/api';
+import StarRating from './StarRating.vue';
 
 export default {
-  props: ['bookToEdit'], // Recebe o livro a ser editado como uma prop
+  components: {
+    StarRating,
+  },
+
   data() {
     return {
-      book: this.bookToEdit || { title: '', author: '', year: null }, // Inicializa os dados do livro
+      books: [],
+      form: {
+        title: '',
+        author: '',
+        rating: 0,
+        available: true,
+      },
+      isEditing: false,
+      editingId: null,
+      isLoading: false,
+      isSubmitting: false,
+      errorMessage: '',
     };
   },
-  watch: {
-    bookToEdit: {
-      immediate: true,
-      handler(newVal) {
-        this.book = newVal || { title: '', author: '', year: null }; // Atualiza os dados quando a prop mudar
-      },
-    },
-  },
+
   methods: {
-    handleSubmit() {
-      if (this.book._id) {
-        api.updateBook(this.book._id, this.book).then(() => {
-          this.$emit('book-updated'); // Emite um evento quando o livro é atualizado
-        });
-      } else {
-        api.addBook(this.book).then(() => {
-          this.$emit('book-added'); // Emite um evento quando um novo livro é adicionado
-        });
+    async fetchBooks() {
+      this.isLoading = true;
+      this.errorMessage = ''; // Reseta a mensagem de erro
+      try {
+        const response = await api.getBooks();
+        this.books = response.data;
+      } catch (error) {
+        this.errorMessage = 'Erro ao carregar livros. Tente novamente mais tarde.';
+      } finally {
+        this.isLoading = false;
       }
     },
+
+    async handleSubmit() {
+      this.isSubmitting = true;
+      this.errorMessage = ''; // Reseta a mensagem de erro
+      try {
+        if (this.isEditing) {
+          await api.updateBook(this.editingId, this.form);
+        } else {
+          await api.addBook(this.form);
+        }
+        this.resetForm();
+        this.fetchBooks();
+      } catch (error) {
+        this.errorMessage = 'Erro ao salvar o livro. Tente novamente mais tarde.';
+      } finally {
+        this.isSubmitting = false;
+      }
+    },
+
+    editBook(book) {
+      this.form = { ...book };
+      this.isEditing = true;
+      this.editingId = book._id;
+    },
+
+    async deleteBook(id) {
+      this.isLoading = true;
+      this.errorMessage = ''; // Reseta a mensagem de erro
+      try {
+        await api.deleteBook(id);
+        this.fetchBooks();
+      } catch (error) {
+        this.errorMessage = 'Erro ao excluir o livro. Tente novamente mais tarde.';
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    updateRating(newRating) {
+      this.form.rating = newRating;
+    },
+
+    resetForm() {
+      this.form = { title: '', author: '', rating: 0, available: true };
+      this.isEditing = false;
+      this.editingId = null;
+    },
+  },
+
+  mounted() {
+    this.fetchBooks();
   },
 };
 </script>
 
 <style scoped>
-/* Estilo do contêiner do formulário */
-.bookform-container {
-  display: flex; /* Utiliza flexbox para layout */
-  justify-content: center; /* Centraliza horizontalmente */
-  align-items: flex-start; /* Alinha os itens ao topo */
-  padding: 20px; /* Espaçamento ao redor do contêiner */
-}
-
-/* Estilo do formulário */
 .book-form {
-  display: flex; /* Utiliza flexbox para layout horizontal */
-  align-items: center; /* Alinha os itens verticalmente no centro */
-  gap: 10px; /* Espaço entre os campos */
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-/* Estilo de cada grupo de campo */
-.form-group {
-  display: flex; /* Permite o uso de flexbox */
-  flex-direction: column; /* Organiza os elementos em coluna */
+form {
+  margin-bottom: 20px;
 }
 
-/* Estilo dos campos de entrada */
-.book-title,
-.book-author,
-.book-year {
-  padding: 8px; /* Espaçamento interno para conforto */
-  border: 1px solid #ccc; /* Borda padrão */
-  border-radius: 5px; /* Bordas arredondadas */
-  font-size: 14px; /* Tamanho da fonte */
-  width: 100px; /* Largura fixa para os campos */
+form label {
+  display: block;
+  margin-bottom: 5px;
 }
 
-/* Estilo do campo de entrada ao receber foco */
-.book-title:focus,
-.book-author:focus,
-.book-year:focus {
-  border-color: #28a745; /* Muda a cor da borda quando ativo */
+form input, form select, form button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  padding: 5px;
 }
 
-/* Estilo do botão de envio */
-.submit-button {
-  background-color: #28a745; /* Cor de fundo verde */
-  color: white; /* Cor do texto em branco */
-  border: none; /* Sem borda */
-  border-radius: 5px; /* Bordas arredondadas */
-  padding: 8px 16px; /* Espaçamento interno */
-  font-size: 14px; /* Tamanho da fonte */
-  cursor: pointer; /* Muda o cursor para indicar que é clicável */
-  transition: background-color 0.3s; /* Transição suave para a mudança de cor */
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 
-/* Estilo do botão ao passar o mouse */
-.submit-button:hover {
-  background-color: #218838; /* Cor de fundo mais escura ao passar o mouse */
+ul li {
+  margin-bottom: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-bottom: 15px;
+}
+
+button:disabled {
+  background-color: #ccc;
+}
+
+.is-loading {
+  font-size: 16px;
+  color: gray;
+  text-align: center;
+  margin-top: 20px;
 }
 </style>
