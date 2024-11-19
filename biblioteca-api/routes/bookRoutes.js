@@ -4,6 +4,7 @@ const Book = require('../models/Book'); // Certifique-se de ter criado o modelo 
 
 // Adicionar um novo livro
 router.post('/', async (req, res) => {
+  console.log('Dados recebidos:', req.body);  // Log dos dados recebidos
   const { title, author, rating, available } = req.body;
 
   try {
