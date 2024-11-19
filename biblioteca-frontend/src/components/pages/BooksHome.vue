@@ -25,7 +25,7 @@
               <ul>
                 <li><i class="icon-perfil"></i> Perfil</li>
                 <li><i class="icon-config"></i> Configurações</li>
-                <li><i class="icon-sair"></i> Sair</li>
+                <li @click="logout"><i class="icon-sair"></i> Sair</li>
               </ul>
             </div>
           </div>
@@ -266,6 +266,11 @@
       // Lógica de pesquisa aqui
       console.log("Pesquisa iniciada:", this.pesquisa);
     },
+    logout() {
+      // Limpar o armazenamento local ou de sessão, caso você tenha um token de login armazenado
+      localStorage.removeItem('auth_token');  // Se você estiver usando o localStorage
+      this.$router.push('/')
+    }
   },
 };
 </script>

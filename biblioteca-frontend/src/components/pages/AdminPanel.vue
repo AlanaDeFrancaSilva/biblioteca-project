@@ -8,19 +8,19 @@
         <img src="@/assets/logo.png" alt="Logo" class="logo-icon">
         <h1 class="title">Administrativo</h1>
       </div>
-      <div class="header-right">
-        <div class="perfil-container" @click="toggleDropdown">
-          <div class="perfil-circulo"></div>
-          <div class="perfil-dropdown" v-if="showDropdown">
-            <ul>
-              <li><i class="icon-perfil"></i> Perfil</li>
-              <li><i class="icon-config"></i> Configurações</li>
-              <li><i class="icon-sair"></i> Sair</li>
-            </ul>
+      <div class="cabecalho-direita">
+          <div class="perfil-container" @click="toggleDropdown">
+            <div class="perfil-circulo"></div>
+            <div class="perfil-dropdown" v-if="showDropdown">
+              <ul>
+                <li><i class="icon-perfil"></i> Perfil</li>
+                <li><i class="icon-config"></i> Configurações</li>
+                <li @click="logout"><i class="icon-sair"></i> Sair</li>
+              </ul>
+            </div>
           </div>
         </div>
-      </div>
-    </header>
+      </header>
 
     <!-- Corpo -->
     <div class="main-content">
@@ -172,6 +172,14 @@ export default {
     goToBookForm() {
       this.$router.push('/bookForm'); // Navega para a página /book-form
     },
+    // Método para realizar o logout
+    logout() {
+      // Limpar o armazenamento local ou de sessão, caso você tenha um token de login armazenado
+      localStorage.removeItem('auth_token');  // Se você estiver usando o localStorage
+
+      // Depois de limpar os dados de sessão, redireciona para a página inicial
+      this.$router.push('/'); // Redireciona para a HomePage
+    }
   },
   mounted() {
     // Carrega os dias ao montar o componente
@@ -206,27 +214,46 @@ export default {
   margin-left: 10px;
 }
 
+/* Estilização do perfil */
 .perfil-container {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
 }
 
 .perfil-circulo {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: #333;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #333;
 }
 
 .perfil-dropdown {
-  position: absolute;
-  top: 60px;
-  right: 20px;
-  background: white;
-  border: 1px solid #ddd;
-  padding: 10px;
-  width: 120px;
+    position: absolute;
+    right: 0;
+    top: 50px;
+    background-color: white;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    width: 150px;
+    z-index: 1;
+}
+
+.perfil-dropdown ul {
+    list-style-type: none;
+    padding: 10px;
+}
+
+.perfil-dropdown li {
+    padding: 8px 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.perfil-dropdown li:hover {
+    background-color: #f1f1f1;
 }
 
 /* Corpo */
