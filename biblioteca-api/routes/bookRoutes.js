@@ -36,4 +36,52 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Atualizar um livro existente (PUT)
+router.put('/:id', async (req, res) => {
+  const { id } = req.params; // ID do livro que será atualizado
+  const { title, author, rating, available } = req.body; // Dados para atualização
+
+  try {
+    const updatedBook = await Book.findByIdAndUpdate(id, {
+      title,
+      author,
+      rating,
+      available
+    }, { new: true }); // O "new: true" retorna o livro atualizado
+
+    if (!updatedBook) {
+      return res.status(404).json({ message: 'Livro não encontrado' });
+    }
+
+    res.status(200).json(updatedBook);
+  } catch (error) {
+    console.error('Erro ao atualizar livro:', error);
+    res.status(400).json({
+      message: 'Erro ao atualizar livro',
+      error: error.message,
+    });
+  }
+});
+
+// Deletar um livro (DELETE)
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params; // ID do livro que será deletado
+
+  try {
+    const deletedBook = await Book.findByIdAndDelete(id);
+
+    if (!deletedBook) {
+      return res.status(404).json({ message: 'Livro não encontrado' });
+    }
+
+    res.status(200).json({ message: 'Livro deletado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao deletar livro:', error);
+    res.status(400).json({
+      message: 'Erro ao deletar livro',
+      error: error.message,
+    });
+  }
+});
+
 module.exports = router;
