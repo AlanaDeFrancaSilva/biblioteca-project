@@ -23,7 +23,8 @@
             <div class="perfil-circulo"></div>
             <div class="perfil-dropdown" v-if="showDropdown">
               <ul>
-                <li><i class="icon-perfil"></i> Perfil</li>
+                <!-- Atualize a opção no dropdown do cabeçalho -->
+                <li><router-link to="/perfil"><i class="icon-perfil"></i> Perfil</router-link></li>
                 <li><i class="icon-config"></i> Configurações</li>
                 <li @click="logout"><i class="icon-sair"></i> Sair</li>
               </ul>

@@ -7,6 +7,7 @@ import HomePage from './components/pages/HomePage.vue';
 import BooksHome from './components/pages/BooksHome.vue';
 import BookForm from './components/pages/BookForm.vue';
 import BookL from './components/pages/BookList.vue';
+import Perfil from './components/pages/PerfilPage.vue';
 
 const routes = [
   { path: '/login', component: LoginPage },
@@ -17,6 +18,7 @@ const routes = [
   { path: '/booksHome', component: BooksHome },
   { path: '/bookForm', component: BookForm },
   { path: '/booksList', component: BookL },
+  { path: '/perfil', component: Perfil },
 ];
 
 const router = createRouter({
