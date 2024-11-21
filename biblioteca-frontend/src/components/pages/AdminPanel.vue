@@ -13,7 +13,7 @@
             <div class="perfil-circulo"></div>
             <div class="perfil-dropdown" v-if="showDropdown">
               <ul>
-                <li><i class="icon-perfil"></i> Perfil</li>
+                <li @click="profile"><i class="icon-perfil"></i> Perfil</li>
                 <li><i class="icon-config"></i> Configurações</li>
                 <li @click="logout"><i class="icon-sair"></i> Sair</li>
               </ul>
@@ -179,6 +179,10 @@ export default {
 
       // Depois de limpar os dados de sessão, redireciona para a página inicial
       this.$router.push('/'); // Redireciona para a HomePage
+    },
+    profile() {
+      // redireciona para a página PerfilPage
+      this.$router.push('/perfil');
     }
   },
   mounted() {
