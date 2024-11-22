@@ -1,11 +1,10 @@
 <template>
   <div class="book-form">
     <h1>Gerenciamento de Livros</h1>
-    
-    <!-- Exibir mensagem de erro caso haja algum erro -->
+
     <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
-    <form @submit.prevent="handleSubmit">
+    <form @submit.prevent="handleSubmit" enctype="multipart/form-data">
       <label for="title">Título</label>
       <input v-model="form.title" id="title" required />
 
@@ -21,6 +20,9 @@
         <option :value="false">Indisponível</option>
       </select>
 
+      <label for="image">Imagem</label>
+      <input type="file" @change="handleImageUpload" id="image" />
+
       <button type="submit" :disabled="isSubmitting">{{ isEditing ? 'Atualizar' : 'Adicionar' }} Livro</button>
     </form>
 
@@ -34,7 +36,6 @@
       </li>
     </ul>
 
-    <!-- Exibição do carregamento -->
     <div v-if="isLoading">Carregando...</div>
   </div>
 </template>
@@ -56,6 +57,7 @@ export default {
         author: '',
         rating: 0,
         available: true,
+        image: null, // Adiciona a imagem ao estado
       },
       isEditing: false,
       editingId: null,
@@ -81,19 +83,45 @@ export default {
 
     async handleSubmit() {
       this.isSubmitting = true;
-      this.errorMessage = ''; // Reseta a mensagem de erro
+      this.errorMessage = '';
+
+      const formData = new FormData();
+      
+      // Adiciona os dados do livro ao FormData
+      formData.append('title', this.form.title);
+      formData.append('author', this.form.author);
+      formData.append('rating', this.form.rating);
+      formData.append('available', this.form.available);
+      
+      // Se houver uma imagem, adicione ao FormData
+      if (this.form.image) {
+        formData.append('image', this.form.image);
+      }
+
+      // Logando o conteúdo do FormData para verificar o que está sendo enviado
+      console.log("FormData enviado: ", formData);
+
       try {
+        // Envia o FormData para a API
         if (this.isEditing) {
-          await api.updateBook(this.editingId, this.form);
+          await api.updateBook(this.editingId, formData);
         } else {
-          await api.addBook(this.form);
+          await api.addBook(formData);
         }
         this.resetForm();
-        this.fetchBooks();
+        await this.fetchBooks();  // Certifique-se de que a função de recarregar os livros é chamada
       } catch (error) {
         this.errorMessage = 'Erro ao salvar o livro. Tente novamente mais tarde.';
+        console.error(error);
       } finally {
         this.isSubmitting = false;
+      }
+    },
+
+    handleImageUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        this.form.image = file; // Armazena a imagem no estado
       }
     },
 
@@ -105,10 +133,10 @@ export default {
 
     async deleteBook(id) {
       this.isLoading = true;
-      this.errorMessage = ''; // Reseta a mensagem de erro
+      this.errorMessage = '';
       try {
         await api.deleteBook(id);
-        this.fetchBooks();
+        await this.fetchBooks(); // Atualiza a lista após deletar
       } catch (error) {
         this.errorMessage = 'Erro ao excluir o livro. Tente novamente mais tarde.';
       } finally {
@@ -121,14 +149,14 @@ export default {
     },
 
     resetForm() {
-      this.form = { title: '', author: '', rating: 0, available: true };
+      this.form = { title: '', author: '', rating: 0, available: true, image: null };
       this.isEditing = false;
       this.editingId = null;
     },
   },
 
   mounted() {
-    this.fetchBooks();
+    this.fetchBooks(); // Carrega a lista de livros ao montar o componente
   },
 };
 </script>

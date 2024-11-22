@@ -260,23 +260,21 @@
     };
   },
   methods: {
-    toggleDropdown() {
-      this.showDropdown = !this.showDropdown;
-    },
-    handleSearch() {
-      // Lógica de pesquisa aqui
-      console.log("Pesquisa iniciada:", this.pesquisa);
-    },
-    logout() {
-      // Limpar o armazenamento local ou de sessão, caso você tenha um token de login armazenado
-      localStorage.removeItem('auth_token');  // Se você estiver usando o localStorage
-      this.$router.push('/')
-    },
-    profile() {
-      // redireciona para a página PerfilPage
-      this.$router.push('/perfil');
-    }
+  toggleDropdown() {
+    this.showDropdown = !this.showDropdown;
   },
+  handleSearch() {
+    console.log("Pesquisa iniciada:", this.pesquisa);
+  },
+  profile() {
+    console.log("Redirecionando para a página de perfil..."); // Debug
+    this.$router.push('/perfil'); // Redireciona para a página de perfil
+  },
+  logout() {
+    localStorage.removeItem('auth_token');
+    this.$router.push('/');
+  }
+}
 };
 </script>
   
