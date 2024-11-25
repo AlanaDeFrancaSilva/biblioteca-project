@@ -8,6 +8,7 @@ import BooksHome from './components/pages/BooksHome.vue';
 import BookForm from './components/pages/BookForm.vue';
 import BookL from './components/pages/BookList.vue';
 import Perfil from './components/pages/PerfilPage.vue';
+import Clivros from './components/pages/CabecalhoLivro.vue';
 
 const routes = [
   { path: '/login', component: LoginPage },
@@ -19,6 +20,7 @@ const routes = [
   { path: '/bookForm', component: BookForm },
   { path: '/booksList', component: BookL },
   { path: '/perfil', component: Perfil },
+  { path: '/Clivros', component: Clivros },
 ];
 
 const router = createRouter({

@@ -7,7 +7,7 @@
         </div>
         <nav>
           <ul>
-            <li><router-link to="/livros">Livros</router-link></li>
+            <li><router-link to="/Clivros">Livros</router-link></li>
             <li><router-link to="/noticias">Notícias</router-link></li>
             <li><router-link to="/sobre">Sobre</router-link></li>
             <li><a href="https://transparencia.sp.senai.br/sac" target="_blank">Fale Conosco</a></li>
@@ -242,15 +242,12 @@
 
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #f9f9f9; /* Cor de fundo mais suave */
-    color: #333; /* Cor de texto padrão */
-    font-size: 14px; /* Reduzido de 16px para 14px */
-}
-
-/* Adiciona uma borda ao redor do Cabeçalho e do Rodapé */
-.cabecalho, footer {
-    border: 1px solid #ddd; /* Cor da borda */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+    background-color: #f9f9f9;
+    color: #333;
+    font-size: 14px;
+    min-height: 100vh;
+    margin-bottom: 60px;
+    padding-top: 100px; /* Adiciona espaçamento para que o conteúdo não sobreponha o cabeçalho fixo */
 }
 
 /* Estilo do botão de login */
@@ -292,16 +289,20 @@ body {
     background-color: #C3201F; /* Cor de fundo mais escura */
 }
 
-/* Estilo do cabeçalho */
 .cabecalho {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f9f9f9; /* cor para o cabeçalho */
-    color: black; /* Cor do texto no cabeçalho */
-    padding: 15px 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    font-size: 14px; /* Ajustado para um tamanho menor */
+    display: flex; /* Usado para criar um layout flexível, permitindo alinhar os itens de forma eficiente */
+    justify-content: space-between; /* Distribui os itens com o máximo de espaço possível entre eles */
+    align-items: center; /* Alinha os itens verticalmente no centro */
+    background-color: #f9f9f9; /* Cor de fundo do cabeçalho */
+    color: black; /* Cor do texto do cabeçalho */
+    padding: 15px 20px; /* Define o espaçamento interno (padding) do cabeçalho */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Adiciona uma sombra suave ao cabeçalho */
+    font-size: 14px; /* Define o tamanho da fonte no cabeçalho */
+    width: 100%; /* Garante que o cabeçalho ocupe toda a largura da tela */
+    position: fixed; /* Faz com que o cabeçalho permaneça fixo no topo da página ao rolar */
+    top: 0; /* Coloca o cabeçalho no topo da página */
+    left: 0; /* Alinha o cabeçalho à esquerda */
+    z-index: 10; /* Garante que o cabeçalho fique acima de outros elementos que possam ter a mesma posição */
 }
 
 /* Estilo da logo */
@@ -383,7 +384,8 @@ nav ul li a:hover {
 
 /* Propaganda */
 .propaganda {
-    margin: 20px 0;
+    margin-top: 100px; /* Aumenta o espaço superior da propaganda */
+    margin-bottom: 30px; /* Mantém o espaço inferior */
     text-align: center;
 }
 
@@ -428,7 +430,7 @@ hr {
 }
 
 .livro img {
-    width: 60%; /* Diminui a largura da imagem */
+    width: 50%; /* Diminui a largura da imagem */
     height: auto; /* Mantém a proporção */
     border-radius: 6px;
     margin-bottom: 6px; /* Diminui a margem inferior */
@@ -447,34 +449,33 @@ hr {
 }
 
 /*Botão para se cadastrar p/ +*/
-
-/* Estilização do contêiner para centralizar */
 .container-cadastre {
-    display: flex;
-    flex-direction: column; /* Para garantir que o botão fique no centro mesmo se o espaço mudar */
-    justify-content: center; /* Centraliza verticalmente */
-    align-items: center;     /* Centraliza horizontalmente */
-    margin-bottom: 10px; /* Ajuste para dar espaço ao rodapé */
+    display: flex; /* Usa o Flexbox para organizar os elementos de forma flexível */
+    flex-direction: column; /* Alinha os itens na coluna (verticalmente) */
+    justify-content: center; /* Centraliza o conteúdo verticalmente dentro do contêiner */
+    align-items: center;     /* Centraliza o conteúdo horizontalmente dentro do contêiner */
+    margin-top: 50px; /* Adiciona 50px de espaço acima do contêiner (acima do botão) */
+    margin-bottom: 50px; /* Adiciona 50px de espaço abaixo do contêiner (abaixo do botão) */
 }
 
-/* Botão para se cadastrar p/ + */
+/* Estilização do botão "Se cadastre para mais" */
 .btn-cadastre-mais {
-    background-color: #F4271C;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px; /* Reduzir o padding */
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-    margin: 0 auto; /* Diminui o espaço ao redor do botão */
-    text-decoration: none; /* Remove a sublinhado do link */
+    background-color: #F4271C; /* Cor de fundo vermelha para o botão */
+    color: #ffffff; /* Cor do texto do botão (branco) */
+    border: none; /* Remove a borda padrão do botão */
+    border-radius: 5px; /* Bordas arredondadas do botão */
+    padding: 8px 12px; /* Ajusta o espaçamento interno do botão (menos padding) */
+    cursor: pointer; /* Muda o cursor para o formato de mão quando passa por cima */
+    font-size: 14px; /* Tamanho da fonte do texto dentro do botão */
+    transition: background-color 0.3s; /* Transição suave para a mudança de cor de fundo */
+    margin: 0 auto; /* Garante que o botão seja centralizado (sem margens laterais) */
+    text-decoration: none; /* Remove qualquer sublinhado do link */
 }
 
+/* Efeito de hover no botão "Se cadastre para mais" */
 .btn-cadastre-mais:hover {
-    background-color: #C3201F;
+    background-color: #C3201F; /* Muda a cor de fundo para um tom mais escuro quando o mouse passa por cima */
 }
-
 
 /* Rodapé */
 footer {
@@ -492,7 +493,9 @@ footer {
 .container {
     min-height: 100vh; /* Ajusta a altura mínima do conteúdo para a altura da página */
     margin-bottom: 60px; /* Adiciona um espaçamento de 60px no final do conteúdo para o rodapé */
+    padding-top: 100px; /* Este espaçamento desloca o conteúdo para baixo, evitando que seja coberto pelo cabeçalho */
 }
+
 
 .footer-esquerda {
     display: flex;
