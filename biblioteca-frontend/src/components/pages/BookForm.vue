@@ -29,6 +29,9 @@
     <h2>Lista de Livros</h2>
     <ul>
       <li v-for="book in books" :key="book._id">
+        <div>
+          <img v-if="book.image" :src="'http://localhost:5000' + book.image" alt="Imagem do livro" width="100" />
+        </div>
         {{ book.title }} - {{ book.author }} ({{ book.rating }} estrelas) -
         <span>{{ book.available ? 'Disponível' : 'Indisponível' }}</span>
         <button @click="editBook(book)">Editar</button>
@@ -39,6 +42,7 @@
     <div v-if="isLoading">Carregando...</div>
   </div>
 </template>
+
 
 <script>
 import api from '@/services/api';

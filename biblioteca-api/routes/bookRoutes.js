@@ -4,7 +4,7 @@ const path = require('path');
 const router = express.Router();
 const Book = require('../models/Book');
 
-// Configuração do Multer para salvar imagens no diretório 'uploads' (se necessário)
+// Configuração do Multer para salvar imagens no diretório 'uploads'
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'uploads/'); // Pasta de destino para imagens
@@ -14,28 +14,35 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+// Configuração do Multer para aceitar apenas arquivos de imagem com extensões .jpeg, .jpg, .png
+const upload = multer({
+  storage: storage,
+  fileFilter: (req, file, cb) => {
+    const filetypes = /jpeg|jpg|png/;  // Permite JPEG, JPG e PNG
+    const mimetype = filetypes.test(file.mimetype); // Verifica o tipo MIME do arquivo
 
-// Adicionar um novo livro com imagem
-router.post('/', upload.single('image'), async (req, res) => {
-  const { title, author, rating, available } = req.body; // Captura os campos
-  const imagePath = req.file ? req.file.path : null; // Salva o caminho da imagem, caso exista
-
-  // Converte `available` para booleano
-  const availableBool = available === 'true'; // 'true' se torna true, 'false' se torna false
-
-  console.log('Dados recebidos no backend:', req.body);
-
-  if (!title || !author || !rating || availableBool === undefined) {
-    return res.status(400).json({ message: 'Faltam dados obrigatórios.' });
+    if (mimetype) {
+      return cb(null, true); // Aceita o arquivo
+    } else {
+      cb(new Error('Apenas imagens JPEG, JPG e PNG são permitidas.')); // Rejeita se não for uma imagem válida
+    }
   }
+});
+
+// Rota para servir as imagens armazenadas na pasta 'uploads'
+router.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+// Adicionar um novo livro com imagem (agora aceita multipart/form-data)
+router.post('/', upload.single('image'), async (req, res) => {
+  const { title, author, rating, available } = req.body;
+  const imagePath = req.file ? '/uploads/' + req.file.filename : null; // Salva o caminho relativo da imagem
 
   try {
     const newBook = new Book({
       title,
       author,
       rating,
-      available: availableBool, // Usando o valor booleano
+      available,
       image: imagePath, // Armazena o caminho da imagem
     });
 
@@ -54,6 +61,32 @@ router.get('/', async (req, res) => {
     res.status(200).json(books);
   } catch (error) {
     res.status(400).json({ message: 'Erro ao buscar livros', error });
+  }
+});
+
+// Atualizar um livro pelo ID
+router.put('/:id', upload.single('image'), async (req, res) => {
+  const { id } = req.params;
+  const { title, author, rating, available } = req.body;
+  const imagePath = req.file ? '/uploads/' + req.file.filename : req.body.image; // Use imagem do corpo se não for nova
+
+  try {
+    const updatedBook = await Book.findByIdAndUpdate(id, {
+      title,
+      author,
+      rating,
+      available,
+      image: imagePath,  // Atualiza o campo de imagem também
+    }, { new: true });
+
+    if (!updatedBook) {
+      return res.status(404).json({ message: 'Livro não encontrado' });
+    }
+
+    res.status(200).json(updatedBook);
+  } catch (error) {
+    console.error('Erro ao atualizar livro:', error);
+    res.status(400).json({ message: 'Erro ao atualizar livro', error: error.message });
   }
 });
 
