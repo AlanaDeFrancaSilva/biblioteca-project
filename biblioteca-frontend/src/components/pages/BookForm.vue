@@ -30,7 +30,7 @@
     <ul>
       <li v-for="book in books" :key="book._id">
         <div>
-          <img v-if="book.image" :src="'http://localhost:5000' + book.image" alt="Imagem do livro" width="100" />
+          <img v-if="book.image" :src="`http://localhost:5000/${book.image}`" alt="Imagem do livro" width="100" />
         </div>
         {{ book.title }} - {{ book.author }} ({{ book.rating }} estrelas) -
         <span>{{ book.available ? 'Disponível' : 'Indisponível' }}</span>

@@ -7,9 +7,9 @@
         </div>
         <nav>
           <ul>
-            <li><router-link to="/Clivros">Livros</router-link></li>
-            <li><router-link to="/noticias">Notícias</router-link></li>
-            <li><router-link to="/sobre">Sobre</router-link></li>
+            <li><a href="https://sp.senai.br/unidade/campinas/biblioteca" target="_blank">Biblioteca</a></li>
+            <li><router-link to="/Cnotic">Notícias</router-link></li>
+            <li><router-link to="/Csobre">Sobre</router-link></li>
             <li><a href="https://transparencia.sp.senai.br/sac" target="_blank">Fale Conosco</a></li>
           </ul>
         </nav>
