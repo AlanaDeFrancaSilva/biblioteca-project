@@ -1,9 +1,14 @@
 <template>
   <div class="admin-panel">
+
+    <head>
+      <!-- Link para o Google Fonts -->
+      <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+    </head>    
     
     <!-- Cabeçalho -->
-    <header class="header-admin">
-      <div class="header-left">
+    <header class="cabecalho">
+      <div class="logo">
         <img src="@/assets/menu.png" alt="Menu" class="menu-icon" @click="toggleMenu">
         <img src="@/assets/logo.png" alt="Logo" class="logo-icon">
         <h1 class="title">Administrativo</h1>
@@ -193,71 +198,88 @@ export default {
 </script>
 
 <style scoped>
+body {
+  font-family: 'Noto Sans', sans-serif;
+}
+
 /* Cabeçalho */
-.header-admin {
+.cabecalho {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #f5f5f5;
-  padding: 10px 20px;
+  justify-content: space-between;  /* Espaça o conteúdo de logo e perfil */
+  align-items: center;  /* Alinha verticalmente */
+  background-color: #f9f9f9;
+  color: black;
+  padding: 15px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
 }
 
-.header-left, .header-right {
+/* Logo */
+.logo {
   display: flex;
   align-items: center;
+  flex-grow: 1;  /* Faz a logo ocupar o máximo de espaço disponível */
+  margin-left: 20px;  /* Move o conteúdo da logo um pouco para a direita */
 }
 
-.menu-icon, .logo-icon, .settings-icon {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
+.logo img {
+  height: 40px;
+  margin-right: 30px;
 }
 
 .title {
-  font-size: 24px;
-  margin-left: 10px;
+  font-family: 'Noto Sans', sans-serif; /* Aplica a fonte Noto Sans */
+  font-size: 15px; /* Tamanho da fonte ajustado */
+  font-weight: bold;
+  margin-left: 0px;
 }
 
-/* Estilização do perfil */
+/* Perfil */
 .perfil-container {
-    position: relative;
-    display: inline-block;
-    cursor: pointer;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  margin-right: 50px; /* Ajuste a distância que você quer mover para a esquerda */
 }
 
 .perfil-circulo {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #333;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #333;
 }
 
 .perfil-dropdown {
-    position: absolute;
-    right: 0;
-    top: 50px;
-    background-color: white;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    width: 150px;
-    z-index: 1;
+  position: absolute;
+  right: 0;
+  top: 50px;
+  background-color: white;
+  box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+  border-radius: 8px;
+  width: 150px;
+  z-index: 1;
 }
 
 .perfil-dropdown ul {
-    list-style-type: none;
-    padding: 10px;
+  list-style-type: none;
+  padding: 10px;
 }
 
 .perfil-dropdown li {
-    padding: 8px 10px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    transition: background-color 0.2s;
+  padding: 8px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
 }
 
 .perfil-dropdown li:hover {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 /* Corpo */
@@ -266,11 +288,12 @@ export default {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  margin-top: 70px;  /* Adiciona espaçamento extra, se necessário */
 }
 
 .main-box {
   background-color: #f0f0f0;
-  padding: 40px;
+  padding: 60px;
   width: 100%;
   max-width: 1700px;
   text-align: center;
@@ -281,14 +304,17 @@ export default {
 .search-bar {
   width: 60%;
   padding: 10px;
-  margin-bottom: 20px;
+  margin: 0; /* Remover margem */
+  border: none; /* Remover borda */
+  background-color: #fff; /* Define um fundo branco para a barra de pesquisa */
+  border-radius:10px; /* Adiciona bordas arredondadas */
 }
 
 .action-circles {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 150px;
+  gap: 100px; /* Ajuste o espaçamento entre os círculos, se necessário */
   width: 100%;
   padding: 0;
 }
@@ -298,8 +324,8 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 80px;
-  height: 80px;
+  width: 60px; /* Reduzido de 80px para 60px */
+  height: 60px; /* Reduzido de 80px para 60px */
   border-radius: 50%;
   cursor: pointer;
   text-align: center;
@@ -308,9 +334,9 @@ export default {
 
 .circle p {
   position: absolute;
-  bottom: -20px;
+  bottom: -18px; /* Ajuste o espaçamento entre o texto e o círculo */
   margin: 0;
-  font-size: 14px;
+  font-size: 12px; /* Diminui o tamanho do texto */
   color: #000000;
 }
 
@@ -327,8 +353,8 @@ export default {
 }
 
 .circle img {
-  width: 40px;
-  height: 40px;
+  width: 30px; /* Reduzido de 40px para 30px */
+  height: 30px; /* Reduzido de 40px para 30px */
 }
 
 /* Mini Dashboard */
@@ -400,23 +426,29 @@ footer {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f9f9f9;
+  background-color: #f9f9f9; /* cor fundo para o rodapé */
   color: black;
   padding: 15px 20px;
   width: 100%;
-  clear: both;
+  clear: both; /* Adiciona essa linha para garantir que o rodapé fique abaixo do conteúdo */
 }
 
-.footer-esquerda, .footer-centro, .footer-direita {
+/* Adiciona essa classe ao elemento que contém o conteúdo da página */
+.container {
+  min-height: 100vh; /* Ajusta a altura mínima do conteúdo para a altura da página */
+  margin-bottom: 60px; /* Adiciona um espaçamento de 60px no final do conteúdo para o rodapé */
+  padding-top: 100px; /* Este espaçamento desloca o conteúdo para baixo, evitando que seja coberto pelo cabeçalho */
+}
+
+
+.footer-esquerda {
   display: flex;
   align-items: center;
-  justify-content: center;
-  padding: 10px;
 }
 
 .footer-esquerda img {
-  height: 20px;
-  margin-right: 10px;
+  height: 20px; /* Define a altura das imagens para 25 pixels, garantindo uma aparência consistente */
+  margin-right: 10px; /* Adiciona uma margem de 10 pixels à direita das imagens para espaçamento entre elementos */
 }
 
 .footer-centro {
@@ -424,16 +456,19 @@ footer {
   flex-grow: 1;
 }
 
+/* Define a largura da .footer-direita */
 .footer-direita {
   display: flex;
   justify-content: space-around;
-  width: 110px;
-  gap: 0.5px;
-  overflow: visible;
+  width: 110px; /* Mantém a largura da .footer-direita em 100px */
+  gap: 0.5px; /* Adiciona um espaçamento de 10px entre as imagens */
+  overflow: visible; /* Define como o conteúdo deve ser tratado quando ultrapassa a largura da página */
 }
 
+/* Define o estilo para as imagens dentro da .footer-direita */
 .footer-direita img {
-  height: 20px;
-  margin: 0 5px;
+  height: 20px; /* Define a altura das imagens */
+  margin: 0 5px; /* Adiciona um espaçamento de 5px à esquerda e à direita das imagens */
 }
+
 </style>
