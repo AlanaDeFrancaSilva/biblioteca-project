@@ -90,4 +90,23 @@ router.put('/:id', upload.single('image'), async (req, res) => {
   }
 });
 
+// Deletar um livro pelo ID
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+  
+  try {
+    const deletedBook = await Book.findByIdAndDelete(id);
+    
+    if (!deletedBook) {
+      return res.status(404).json({ message: 'Livro não encontrado' });
+    }
+
+    console.log('Livro excluído:', deletedBook); // Adicionando log para depuração
+    res.status(200).json({ message: 'Livro excluído com sucesso' });
+  } catch (error) {
+    console.error('Erro ao excluir livro:', error);
+    res.status(400).json({ message: 'Erro ao excluir livro', error: error.message });
+  }
+});
+
 module.exports = router;

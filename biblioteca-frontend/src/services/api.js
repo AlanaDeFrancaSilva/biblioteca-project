@@ -14,7 +14,7 @@ const getBooks = () => {
 };
 
 const addBook = (bookData) => {
-  return api.post('/', bookData); // `bookData` agora deve ser um FormData
+  return api.post('/', bookData);
 };
 
 const updateBook = (id, bookData) => {

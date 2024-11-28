@@ -106,7 +106,6 @@
         </a>
       </div>
     </footer>
-
   </div>
 </template>
 
@@ -200,6 +199,11 @@ export default {
 <style scoped>
 body {
   font-family: 'Noto Sans', sans-serif;
+}
+
+body, html {
+  height: 100%; /* Assegura que o body ocupe toda a altura da tela */
+  margin: 0; /* Remove margens padrão */
 }
 
 /* Cabeçalho */
@@ -307,7 +311,7 @@ body {
   margin: 0; /* Remover margem */
   border: none; /* Remover borda */
   background-color: #fff; /* Define um fundo branco para a barra de pesquisa */
-  border-radius:10px; /* Adiciona bordas arredondadas */
+  border-radius: 10px; /* Adiciona bordas arredondadas */
 }
 
 .action-circles {
@@ -317,6 +321,7 @@ body {
   gap: 100px; /* Ajuste o espaçamento entre os círculos, se necessário */
   width: 100%;
   padding: 0;
+  margin-top: 20px; /* Adiciona um espaçamento extra entre a barra de pesquisa e os círculos */
 }
 
 .circle {
