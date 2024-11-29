@@ -186,7 +186,7 @@ export default {
     },
     profile() {
       // redireciona para a página PerfilPage
-      this.$router.push('/perfil');
+      this.$router.push('/PerfilPage');
     }
   },
   mounted() {

@@ -19,7 +19,7 @@ const routes = [
   { path: '/booksHome', component: BooksHome },
   { path: '/bookForm', component: BookForm },
   { path: '/booksList', component: BookL },
-  { path: '/perfil', component: Perfil },
+  { path: '/PerfilPage', component: Perfil },
   { path: '/Csobre', component: Csobre },
 ];
 

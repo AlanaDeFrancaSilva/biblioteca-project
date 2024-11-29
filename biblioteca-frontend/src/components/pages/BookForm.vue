@@ -50,7 +50,7 @@
           <label for="image">Imagem</label>
           <input type="file" @change="handleImageUpload" id="image" />
 
-          <button type="submit" :disabled="isSubmitting">{{ isEditing ? 'Atualizar' : 'Adicionar' }} Livro</button>
+          <button type="submit" class="add-button" :disabled="isSubmitting">{{ isEditing ? 'Atualizar' : 'Adicionar' }} Livro</button>
         </form>
       </div>
 
@@ -65,8 +65,8 @@
             <div class="book-info">
               <div>{{ book.title }} - {{ book.author }} ({{ book.rating }} estrelas)</div>
               <span>{{ book.available ? 'Disponível' : 'Indisponível' }}</span>
-              <button @click="editBook(book)">Editar</button>
-              <button @click="deleteBook(book._id)">Excluir</button>
+              <button @click="editBook(book)" class="edit-button">Editar</button>
+              <button @click="deleteBook(book._id)" class="delete-button">Excluir</button>
             </div>
           </li>
         </ul>
@@ -87,6 +87,8 @@ export default {
 
   data() {
     return {
+      showDropdown: false, // Controla a exibição do dropdown de perfil
+      showMenu: false, // Controla a exibição do menu lateral
       books: [],
       form: {
         title: '',
@@ -104,6 +106,15 @@ export default {
   },
 
   methods: {
+    // Alterna a visibilidade do dropdown de perfil
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
+    // Alterna a visibilidade do menu lateral
+    toggleMenu() {
+      this.showMenu = !this.showMenu;
+    },
+
     async fetchBooks() {
       this.isLoading = true;
       this.errorMessage = ''; // Reseta a mensagem de erro
@@ -190,6 +201,11 @@ export default {
       this.editingId = null;
     },
 
+    profile() {
+      // redireciona para a página PerfilPage
+      this.$router.push('/PerfilPage');
+    },
+
     // Método para realizar o logout
     logout() {
       // Limpar o armazenamento local ou de sessão, caso você tenha um token de login armazenado
@@ -198,11 +214,8 @@ export default {
       // Depois de limpar os dados de sessão, redireciona para a página inicial
       this.$router.push('/'); // Redireciona para a HomePage
     },
-    profile() {
-      // redireciona para a página PerfilPage
-      this.$router.push('/perfil');
-    }
   },
+
   mounted() {
     this.fetchBooks(); // Carrega a lista de livros ao montar o componente
   },
@@ -364,28 +377,65 @@ ul li {
 }
 
 .book-info {
-  flex-grow: 1;
+  width: 100%; /* Garantir que ocupe toda a largura */
+  display: flex;
+  justify-content: space-between;  /* Alinha conteúdo com espaço entre */
+  align-items: center;  /* Alinha verticalmente no centro */
 }
 
 .book-info div {
-  font-weight: bold;
+  display: flex;
+  justify-content: flex-end; /* Alinha os botões à direita */
+  gap: 5px;  /* Adiciona espaçamento entre os botões */
 }
 
-button {
+.book-info button {
   padding: 5px 10px;
-  background-color: #007bff;
   color: white;
   border: none;
   border-radius: 3px;
   cursor: pointer;
+  transition: background-color 0.3s;
+  margin-left: 5px; /* Ajusta o espaçamento entre os botões */
 }
 
-button:hover {
-  background-color: #0056b3;
+/* Botões */
+button {
+  padding: 5px 10px;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.3s;
 }
 
-button:disabled {
-  background-color: #ccc;
+button.edit-button {
+  background-color: #0035b2; /* Cor para o botão Editar */
+}
+
+button.edit-button:hover {
+  background-color: #002487; /* Efeito hover */
+}
+
+button.delete-button {
+  background-color: #ff0000; /* Cor para o botão Excluir */
+}
+
+button.delete-button:hover {
+  background-color: #cc0000; /* Efeito hover */
+}
+
+button.add-button {
+  background-color: #0035b2; /* Cor para o botão Adicionar */
+}
+
+button.add-button:hover {
+  background-color: #002487; /* Efeito hover */
+}
+
+/* Garantindo que os botões estejam alinhados à direita */
+.book-info button {
+  margin-left: 10px;  /* Dá um pequeno espaçamento entre os botões */
 }
 
 /* Mensagem de erro */
@@ -400,5 +450,4 @@ button:disabled {
   text-align: center;
   margin-top: 20px;
 }
-
 </style>
