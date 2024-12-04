@@ -55,14 +55,14 @@
       </div>
 
       <!-- Seção para a lista de livros -->
-      <div class="right-section">
+      <div class="booklist-container">
         <h2>Lista de Livros</h2>
         <ul>
           <li v-for="book in books" :key="book._id" class="book-item">
             <div class="book-image">
               <img :src="book.image ? `http://localhost:5000${book.image}` : ''" alt="Capa do livro" v-if="book.image" />
             </div>
-            <div class="book-info">
+            <div class="button-group">
               <div>{{ book.title }} - {{ book.author }} ({{ book.rating }} estrelas)</div>
               <span>{{ book.available ? 'Disponível' : 'Indisponível' }}</span>
               <button @click="editBook(book)" class="edit-button">Editar</button>
@@ -376,78 +376,69 @@ ul li {
   object-fit: cover;
 }
 
-.book-info {
-  width: 100%; /* Garantir que ocupe toda a largura */
-  display: flex;
-  justify-content: space-between;  /* Alinha conteúdo com espaço entre */
-  align-items: center;  /* Alinha verticalmente no centro */
+
+/* Container principal Lista */
+.booklist-container {
+  flex-grow: 1; /* Faz a lista ocupar o espaço restante disponível */
+  max-width: 1000px; /* Define a largura máxima do container para 600px */
+  margin: 0 auto; /* Centraliza o container horizontalmente */
+  padding: 20px; /* Adiciona 20px de espaçamento interno (padding) */
+  background-color: #f9f9f9; /* Define a cor de fundo como um tom claro de cinza */
+  border-radius: 10px; /* Adiciona bordas arredondadas com raio de 10px */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra suave ao redor do container */
+  margin-left: 20px; /* Espaçamento à esquerda para separar da seção de gerenciamento */
+  overflow-y: auto; /* Permite rolagem se necessário */
 }
 
-.book-info div {
-  display: flex;
-  justify-content: flex-end; /* Alinha os botões à direita */
-  gap: 5px;  /* Adiciona espaçamento entre os botões */
+/* Estilo da lista de livros */
+.book-list {
+  list-style-type: none; /* Remove os marcadores (bullets) da lista */
+  padding: 0; /* Remove o preenchimento padrão da lista */
+  margin: 0; /* Remove a margem padrão da lista */
 }
 
-.book-info button {
-  padding: 5px 10px;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  margin-left: 5px; /* Ajusta o espaçamento entre os botões */
+/* Cada item da lista */
+.book-item {
+  display: flex; /* Define o uso do Flexbox para o layout do item */
+  justify-content: space-between; /* Distribui o conteúdo de forma espaçada, com espaço entre os elementos */
+  align-items: center; /* Alinha os itens verticalmente no centro */
+  background-color: #ffffff; /* Define a cor de fundo do item como branco */
+  margin-bottom: 10px; /* Adiciona um espaço de 10px abaixo de cada item */
+  padding: 10px; /* Adiciona 10px de espaçamento interno ao redor de cada item */
+  border: 1px solid #ddd; /* Adiciona uma borda de 1px com cor cinza claro */
+  border-radius: 5px; /* Adiciona bordas arredondadas de 5px */
 }
 
-/* Botões */
-button {
-  padding: 5px 10px;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+/* Grupo de botões */
+.button-group {
+  display: flex; /* Define o uso de Flexbox para organizar os botões em linha */
+  gap: 10px; /* Adiciona um espaçamento de 10px entre os botões */
 }
 
-button.edit-button {
-  background-color: #0035b2; /* Cor para o botão Editar */
+/* Botão de editar */
+.edit-button {
+  background-color: #4CAF50; /* Define a cor de fundo do botão de editar como verde */
+  color: white; /* Define a cor do texto como branca */
+  border: none; /* Remove a borda padrão do botão */
+  padding: 5px 10px; /* Adiciona 5px de espaçamento vertical e 10px de espaçamento horizontal */
+  cursor: pointer; /* Muda o cursor para indicar que é um botão clicável */
+  border-radius: 3px; /* Adiciona bordas arredondadas de 3px ao botão */
 }
 
-button.edit-button:hover {
-  background-color: #002487; /* Efeito hover */
+/* Botão de excluir */
+.delete-button {
+  background-color: #f44336; /* Define a cor de fundo do botão de excluir como vermelho */
+  color: white; /* Define a cor do texto como branca */
+  border: none; /* Remove a borda padrão do botão */
+  padding: 5px 10px; /* Adiciona 5px de espaçamento vertical e 10px de espaçamento horizontal */
+  cursor: pointer; /* Muda o cursor para indicar que é um botão clicável */
+  border-radius: 3px; /* Adiciona bordas arredondadas de 3px ao botão */
 }
 
-button.delete-button {
-  background-color: #ff0000; /* Cor para o botão Excluir */
+/* Efeito hover nos botões */
+.edit-button:hover,
+.delete-button:hover {
+  opacity: 0.8; /* Quando o usuário passa o mouse sobre os botões, a opacidade diminui para 0.8 (efeito de suavização) */
 }
 
-button.delete-button:hover {
-  background-color: #cc0000; /* Efeito hover */
-}
-
-button.add-button {
-  background-color: #0035b2; /* Cor para o botão Adicionar */
-}
-
-button.add-button:hover {
-  background-color: #002487; /* Efeito hover */
-}
-
-/* Garantindo que os botões estejam alinhados à direita */
-.book-info button {
-  margin-left: 10px;  /* Dá um pequeno espaçamento entre os botões */
-}
-
-/* Mensagem de erro */
-.error-message {
-  color: red;
-  margin-bottom: 15px;
-}
-
-.is-loading {
-  font-size: 16px;
-  color: gray;
-  text-align: center;
-  margin-top: 20px;
-}
 </style>

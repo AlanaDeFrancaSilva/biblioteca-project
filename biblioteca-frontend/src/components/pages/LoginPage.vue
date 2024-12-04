@@ -117,7 +117,7 @@ export default {
 /* Container do conteúdo da página de login */
 .container {
   max-width: 400px;
-  margin: 100px auto; /* Espaço superior para não cobrir com o cabeçalho fixo */
+  margin: 180px auto; /* Espaço superior para não cobrir com o cabeçalho fixo */
   text-align: center;
   padding-top: 80px; /* Ajuste do padding para que o conteúdo não sobreponha o cabeçalho */
 }
