@@ -1,9 +1,18 @@
 <template> 
-  <div>
-    <header class="header_login">
-      <img src="@/assets/logo.png" alt="Ícone Logo" class="icon-logo">
-      <h1 class="page-title">Cadastro</h1>
-    </header>
+
+<div class="Register-page">
+
+  <head>
+      <!-- Link para o Google Fonts -->
+       <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+      </head>    
+      <!-- Cabeçalho -->
+       <header class="cabecalho">
+        <div class="logo">
+          <img src="@/assets/logo.png" alt="Logo" class="logo-icon">
+          <h1 class="title">Cadastro</h1>
+        </div>
+       </header>
 
     <div class="container">
       <p class="welcome-text">Inscreva-se na Biblioteca Mange</p>
@@ -132,27 +141,46 @@ export default {
 </script>
 
 <style scoped>
-.header_login {
+/* Cabeçalho */
+.cabecalho {
+  display: flex;
+  justify-content: space-between;  /* Espaça o conteúdo de logo e perfil */
+  align-items: center;  /* Alinha verticalmente */
+  background-color: #f9f9f9;
+  color: black;
+  padding: 15px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
+}
+
+/* Logo */
+.logo {
   display: flex;
   align-items: center;
-  padding: 20px;
-  background-color: #f5f5f5;
+  flex-grow: 1;  /* Faz a logo ocupar o máximo de espaço disponível */
+  margin-left: 20px;  /* Move o conteúdo da logo um pouco para a direita */
 }
 
-.icon-logo {
-  width: 100px;
-  height: auto;
-  margin-right: 10px;
+.logo img {
+  height: 40px;
+  margin-right: 30px;
 }
 
-.page-title {
-  font-size: 24px;
-  color: black;
+.title {
+  font-family: 'Noto Sans', sans-serif; /* Aplica a fonte Noto Sans */
+  font-size: 20px; /* Tamanho da fonte */
+  font-weight: bold;
+  margin-left: 0px;
 }
 
 .container {
   max-width: 400px;
-  margin: 150px auto;
+  margin: 100px auto;
   text-align: center;
 }
 
