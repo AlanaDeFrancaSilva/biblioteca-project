@@ -34,7 +34,7 @@ router.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // Adicionar um novo livro com imagem (agora aceita multipart/form-data)
 router.post('/', upload.single('image'), async (req, res) => {
-  const { title, author, rating, available } = req.body;
+  const { title, author, rating, available, description, genre, isbn } = req.body;
   const imagePath = req.file ? '/uploads/' + req.file.filename : null; // Salva o caminho relativo da imagem
 
   try {
@@ -44,6 +44,9 @@ router.post('/', upload.single('image'), async (req, res) => {
       rating,
       available,
       image: imagePath, // Armazena o caminho da imagem
+      description,  // Campo de descrição
+      genre,        // Campo de gênero
+      isbn,  // Adicionando ISBN
     });
 
     await newBook.save();
@@ -67,7 +70,7 @@ router.get('/', async (req, res) => {
 // Atualizar um livro pelo ID
 router.put('/:id', upload.single('image'), async (req, res) => {
   const { id } = req.params;
-  const { title, author, rating, available } = req.body;
+  const { title, author, rating, available, description, genre, isbn  } = req.body;
   const imagePath = req.file ? '/uploads/' + req.file.filename : req.body.image; // Use imagem do corpo se não for nova
 
   try {
@@ -77,6 +80,9 @@ router.put('/:id', upload.single('image'), async (req, res) => {
       rating,
       available,
       image: imagePath,  // Atualiza o campo de imagem também
+      description,  // Atualizando descrição
+      genre,        // Atualizando gênero
+      isbn,  // Atualizando ISBN
     }, { new: true });
 
     if (!updatedBook) {

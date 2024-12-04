@@ -62,7 +62,7 @@ app.post('/api/livros', upload, async (req, res) => {
       return res.status(400).json({ message: 'Imagem é obrigatória!' });
     }
  
-    const { title, author, year, rating, available } = req.body;
+    const { title, author, year, rating, available, description, genre, isbn  } = req.body;
     const image = req.file ? `/uploads/${req.file.filename}` : ''; // Caminho relativo da imagem
  
     // Criar o objeto do livro
@@ -73,6 +73,9 @@ app.post('/api/livros', upload, async (req, res) => {
       rating,
       available,
       image,
+      description,  
+      genre,
+      isbn
     });
  
     // Salvar o livro no banco de dados

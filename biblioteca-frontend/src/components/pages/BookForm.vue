@@ -47,6 +47,38 @@
             <option :value="false">Indisponível</option>
           </select>
 
+          <!-- descrição -->
+          <label for="description">Descrição</label>
+          <textarea v-model="form.description" id="description"></textarea>
+
+          <!-- gênero -->
+          <label for="genre">Gênero</label>
+          <select v-model="form.genre" id="genre">
+            <option value="Administração">Administração</option>
+            <option value="Artes">Artes</option>
+            <option value="Computação">Computação</option>
+            <option value="Educação">Educação</option>
+            <option value="Esporte e Lazer">Esporte e Lazer</option>
+            <option value="Fantasia, Horror e Ficção científica">Fantasia, Horror e Ficção científica</option>
+            <option value="Infantil">Infantil</option>
+            <option value="Romance">Romance</option>
+          </select>
+
+          <!--ISBN -->
+          <label for="isbn">ISBN</label>
+          <input 
+            type="text" 
+            v-model="form.isbn" 
+            id="isbn" 
+            required 
+            pattern="^[0-9]{10,13}$" 
+            title="O ISBN deve conter entre 10 e 13 dígitos numéricos." 
+          />
+          <small v-if="form.isbn && !/^[0-9]{10,13}$/.test(form.isbn)" style="color: red;">
+            O ISBN deve ter entre 10 e 13 dígitos numéricos.
+          </small>
+
+          <!--Imagem -->
           <label for="image">Imagem</label>
           <input type="file" @change="handleImageUpload" id="image" />
 
@@ -64,7 +96,10 @@
             </div>
             <div class="button-group">
               <div>{{ book.title }} - {{ book.author }} ({{ book.rating }} estrelas)</div>
+              <div>{{ book.genre }}</div>  <!-- Exibe o gênero do livro -->
+              <div>{{ book.description }}</div>  <!-- Exibe a descrição do livro -->
               <span>{{ book.available ? 'Disponível' : 'Indisponível' }}</span>
+              <div>ISBN: {{ book.isbn }}</div>  <!-- Exibe o ISBN do livro -->
               <button @click="editBook(book)" class="edit-button">Editar</button>
               <button @click="deleteBook(book._id)" class="delete-button">Excluir</button>
             </div>
@@ -96,12 +131,15 @@ export default {
         rating: 0,
         available: true,
         image: null, // Adiciona a imagem ao estado
+        description:'', 
+        genre:'',   
+        isbn:'',
       },
-      isEditing: false,
-      editingId: null,
-      isLoading: false,
-      isSubmitting: false,
-      errorMessage: '',
+      isEditing: false,  // Indica se o formulário está no modo de edição (false significa que não está).
+      editingId: null,  // Armazena o ID do item que está sendo editado. Inicialmente é null, pois nenhum item está sendo editado.
+      isLoading: false,  // Indica se a aplicação está carregando dados ou recursos. False significa que não está carregando no momento.
+      isSubmitting: false,  // Indica se um formulário ou uma requisição está sendo enviada. False significa que não está sendo enviado.
+      errorMessage: '',  // Armazena uma mensagem de erro, caso ocorra. Inicialmente é uma string vazia, sem erro.
     };
   },
 
@@ -139,6 +177,9 @@ export default {
       formData.append('author', this.form.author);
       formData.append('rating', this.form.rating);
       formData.append('available', this.form.available);
+      formData.append('description', this.form.description); // Adiciona a descrição
+      formData.append('genre', this.form.genre); // Adiciona o gênero
+      formData.append('isbn', this.form.isbn); // Adiciona o ISBN
       
       // Se houver uma imagem, adicione ao FormData
       if (this.form.image) {
@@ -196,7 +237,7 @@ export default {
     },
 
     resetForm() {
-      this.form = { title: '', author: '', rating: 0, available: true, image: null };
+      this.form = { title: '', author: '', rating: 0, available: true, image: null, description:'', genre: '', isbn: '' };
       this.isEditing = false;
       this.editingId = null;
     },
