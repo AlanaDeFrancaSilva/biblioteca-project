@@ -1,9 +1,17 @@
 <template>
-  <div class="body_login">
-    <header class="header_login">
-      <img src="@/assets/logo.png" alt="Ícone Logo" class="icon-logo" />
-      <h1 class="page-title">Login</h1>
-    </header>
+  <div class="Login-page">
+    
+    <head>
+      <!-- Link para o Google Fonts -->
+       <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+      </head>    
+      <!-- Cabeçalho -->
+       <header class="cabecalho">
+        <div class="logo">
+          <img src="@/assets/logo.png" alt="Logo" class="logo-icon">
+          <h1 class="title">Login</h1>
+        </div>
+       </header>
 
     <div class="container">
       <p class="welcome-text">Entrar no Mange Library</p>
@@ -68,49 +76,66 @@ export default {
 </script>
 
 <style scoped>
-.body_login {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background-color: white;
-  height: 100%;
-  overflow: hidden;
+/* Cabeçalho */
+.cabecalho {
+  display: flex;
+  justify-content: space-between;  /* Espaça o conteúdo de logo e perfil */
+  align-items: center;  /* Alinha verticalmente */
+  background-color: #f9f9f9;
+  color: black;
+  padding: 15px 20px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10;
 }
 
-.header_login {
+/* Logo */
+.logo {
   display: flex;
   align-items: center;
-  padding: 20px;
-  background-color: #f5f5f5;
+  flex-grow: 1;  /* Faz a logo ocupar o máximo de espaço disponível */
+  margin-left: 20px;  /* Move o conteúdo da logo um pouco para a direita */
 }
 
-.icon-logo {
-  width: 100px;
-  height: auto;
-  margin-right: 10px;
+.logo img {
+  height: 40px;
+  margin-right: 30px;
 }
 
-.page-title {
-  font-size: 24px;
-  color: black;
+.title {
+  font-family: 'Noto Sans', sans-serif; /* Aplica a fonte Noto Sans */
+  font-size: 20px; /* Tamanho da fonte */
+  font-weight: bold;
+  margin-left: 0px;
 }
 
+
+/* Container do conteúdo da página de login */
 .container {
   max-width: 400px;
-  margin: 150px auto;
+  margin: 100px auto; /* Espaço superior para não cobrir com o cabeçalho fixo */
   text-align: center;
+  padding-top: 80px; /* Ajuste do padding para que o conteúdo não sobreponha o cabeçalho */
 }
 
+/* Texto de boas-vindas */
 .welcome-text {
   font-size: 20px;
   margin: 20px 0;
 }
 
+/* Formulário de login */
 .login-form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
+/* Estilo dos campos de input */
 input {
   padding: 10px;
   border: 1px solid #ccc;
@@ -118,6 +143,7 @@ input {
   font-size: 16px;
 }
 
+/* Botão de login */
 .login-button {
   padding: 10px;
   background-color: black;
@@ -129,10 +155,12 @@ input {
   margin-bottom: 10px;
 }
 
+/* Efeito hover do botão de login */
 .login-button:hover {
   background-color: #333;
 }
 
+/* Link de redefinir senha */
 .reset-password {
   margin-top: 30px;
   color: #4197F1;
@@ -143,11 +171,13 @@ input {
   text-decoration: underline;
 }
 
+/* Texto para criar uma conta */
 .create-account {
   margin-top: 20px;
   color: black;
 }
 
+/* Link para criar conta */
 .create-link {
   color: #4197F1;
   text-decoration: none;
@@ -157,6 +187,7 @@ input {
   text-decoration: underline;
 }
 
+/* Botão de voltar para a home */
 .btn-back {
   display: block;
   margin-top: 20px;
