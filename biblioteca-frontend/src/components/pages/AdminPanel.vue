@@ -70,6 +70,7 @@
           </ul>
         </div>
         <div class="task-list">Checklist de Tarefas</div>
+
         <!-- Calendário -->
          <div class="calendar">
           <div class="calendar-header">
@@ -84,11 +85,20 @@
           </div>
         </div>
 
+        <!-- Anotações do Dia -->
+        <div v-if="selectedDay" class="annotation-container">
+          <textarea v-model="selectedDay.annotation" placeholder="Adicione uma anotação..." rows="4" cols="50"></textarea>
+          <button @click="saveAnnotation">Salvar Anotação</button>
 
-          <!-- Anotação do Dia -->
-           <div v-if="selectedDay" class="annotation-container">
-            <textarea v-model="selectedDay.annotation" placeholder="Adicione uma anotação..." rows="4" cols="50"></textarea>
-            <button @click="saveAnnotation">Salvar Anotação</button>
+          <!-- Lista de Anotações -->
+          <div v-if="selectedDay.annotations.length > 0" class="saved-annotations">
+            <ul>
+              <li v-for="(annotation, index) in selectedDay.annotations" :key="index">
+                <span>{{ annotation }}</span>
+                <button @click="editAnnotation(index)">Editar</button>
+                <button @click="deleteAnnotation(index)">Excluir</button>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
@@ -119,6 +129,7 @@
       </div>
     </footer>
   </div>
+</div>
 </template>
 
 <script>
@@ -178,22 +189,29 @@ export default {
       const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
       for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(this.currentYear, this.currentMonth, day);
-        const annotation = this.getAnnotation(date); // Obtém a anotação salva, se houver
+        const annotations = this.getAnnotations(date); // Obtém a anotação salva, se houver
         
         this.daysInMonth.push({
           date: date,
-          marked: annotation ? true : false, // Marca o dia apenas se houver anotação
-          annotation: annotation || '', // Se não houver anotação, coloca string vazia
+          marked: annotations.length > 0, // Marca o dia se houver anotações
+          annotations: annotations, // Armazena as anotações como um array
           });
         }
       },
 
 
-    // Carrega a anotação do dia (simulando com LocalStorage por enquanto)
-    getAnnotation(date) {
-      const dateString = date.toISOString().split('T')[0]; // Formata a data para string (YYYY-MM-DD)
-      return localStorage.getItem(dateString) || ''; // Retorna a anotação salva ou uma string vazia
-    },
+    // Carrega a anotação do dia, armazena múltiplas anotações
+    getAnnotations(date) {
+      const dateString = date.toISOString().split('T')[0];
+      try {
+        const annotations = JSON.parse(localStorage.getItem(dateString)) || [];
+        return annotations;
+      } catch (error) {
+        console.error("Erro ao carregar as anotações:", error);
+        return [];  // Retorna um array vazio em caso de erro
+        }
+      },
+
 
     // Marca ou desmarca o dia dependendo da anotação
     markDay(day) {
@@ -216,18 +234,40 @@ export default {
     // Salva ou remove anotação no LocalStorage
     saveAnnotation() {
       const dateString = this.selectedDay.date.toISOString().split('T')[0];
-
-      // Se a anotação estiver vazia, removemos a marcação
-      if (!this.selectedDay.annotation) {
-        localStorage.removeItem(dateString); // Remover do LocalStorage
-        this.selectedDay.marked = false;  // Desmarca o dia
-        } else {
-          localStorage.setItem(dateString, this.selectedDay.annotation); // Salva a anotação
-          this.selectedDay.marked = true;  // Marca o dia
-          }
-          
+      const newAnnotation = this.selectedDay.annotation.trim();
+      
+      if (newAnnotation) {
+        this.selectedDay.annotations.push(newAnnotation);
+        try {
+          localStorage.setItem(dateString, JSON.stringify(this.selectedDay.annotations)); // Garante que as anotações são armazenadas como JSON
           alert('Anotação salva!');
-        },
+        } catch (error) {
+          console.error("Erro ao salvar as anotações:", error);
+        }
+      }
+      
+      // Reseta o campo de anotação após salvar
+      this.selectedDay.annotation = '';
+      this.loadDays();
+    },
+
+
+    deleteAnnotation(index) {
+      const dateString = this.selectedDay.date.toISOString().split('T')[0];
+      this.selectedDay.annotations.splice(index, 1); // Remove a anotação selecionada
+      localStorage.setItem(dateString, JSON.stringify(this.selectedDay.annotations)); // Atualiza o LocalStorage
+      this.loadDays(); // Atualiza os dias com a nova lista de anotações
+    },
+
+    editAnnotation(index) {
+      const annotationToEdit = this.selectedDay.annotations[index];
+      this.selectedDay.annotation = annotationToEdit; // Preenche o campo de anotação com o texto da anotação selecionada
+      
+      // Não excluímos a anotação antes da edição; somente marcamos para exclusão depois que o usuário salvar
+      this.selectedDay.annotations.splice(index, 1); // Remove a anotação selecionada da lista
+      
+      // Você pode adicionar uma flag ou lógica para controlar a confirmação da edição, se necessário
+      },
 
     // Navega para o mês anterior no calendário
     previousMonth() {
