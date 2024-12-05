@@ -51,6 +51,10 @@
 
       <!-- Mini Dashboard -->
       <div class="mini-dashboard">
+        <div class="book-count">
+          <h3>Livros</h3>
+          <p>{{ bookCount }} unidades</p>
+        </div>
         <div class="chart">Gráfico de livros</div>
         <div class="popular-books">
           <h3>Livros Mais Procurados</h3>
@@ -110,9 +114,12 @@
 </template>
 
 <script>
+//import axios from "axios";  // Importe o axios
+
 export default {
   data() {
     return {
+      bookCount: 0, // Contagem dos livros
       showDropdown: false, // Controla a exibição do dropdown de perfil
       showMenu: false, // Controla a exibição do menu lateral
       currentMonth: new Date().getMonth(), // Mês atual
@@ -129,14 +136,32 @@ export default {
     },
   },
   methods: {
+    // Método para buscar a contagem de livros do banco de dados
+    async fetchBookCount() {
+      try {
+        const response = await fetch('http://localhost:5000/api/livros/count'); // Usando fetch (ou axios se configurado)
+        const data = await response.json();
+        
+        if (data && data.count !== undefined) {
+          this.bookCount = data.count; // Atualiza o valor de bookCount com a contagem
+        } else {
+            console.error('Contagem de livros não encontrada');
+        }
+      } catch (error) {
+          console.error("Erro ao buscar contagem de livros:", error);
+      }
+    },
+
     // Alterna a visibilidade do dropdown de perfil
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
     },
+    
     // Alterna a visibilidade do menu lateral
     toggleMenu() {
       this.showMenu = !this.showMenu;
     },
+
     // Carrega os dias do mês para exibição no calendário
     loadDays() {
       this.daysInMonth = [];
@@ -148,6 +173,7 @@ export default {
         });
       }
     },
+
     // Navega para o mês anterior no calendário
     previousMonth() {
       if (this.currentMonth === 0) {
@@ -158,6 +184,7 @@ export default {
       }
       this.loadDays();
     },
+
     // Navega para o próximo mês no calendário
     nextMonth() {
       if (this.currentMonth === 11) {
@@ -168,14 +195,17 @@ export default {
       }
       this.loadDays();
     },
+
     // Marca ou desmarca um dia no calendário
     markDay(day) {
       day.marked = !day.marked;
     },
+
     // Navega para a página de formulário de livro
     goToBookForm() {
       this.$router.push('/bookForm'); // Navega para a página /book-form
     },
+
     // Método para realizar o logout
     logout() {
       // Limpar o armazenamento local ou de sessão, caso você tenha um token de login armazenado
@@ -184,17 +214,27 @@ export default {
       // Depois de limpar os dados de sessão, redireciona para a página inicial
       this.$router.push('/'); // Redireciona para a HomePage
     },
+
+    // Método para redirecionar ao perfil do usuário
     profile() {
-      // redireciona para a página PerfilPage
       this.$router.push('/PerfilPage');
     }
   },
   mounted() {
     // Carrega os dias ao montar o componente
     this.loadDays();
+    
+    // Chama o método para obter a contagem de livros
+    this.fetchBookCount();
+    
+    // Atualiza a contagem de livros a cada 10 segundos
+    setInterval(() => {
+      this.fetchBookCount();
+    }, 10000);
   },
 };
 </script>
+
 
 <style scoped>
 body {
@@ -365,10 +405,34 @@ body, html {
 /* Mini Dashboard */
 .mini-dashboard {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 2fr;
   gap: 20px;
   width: 100%;
   max-width: 800px;
+}
+
+.book-count {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 150px; /* Ajuste a altura conforme necessário */
+}
+
+.book-count h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.book-count p {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
 }
 
 .chart, .calendar, .task-list, .popular-books {

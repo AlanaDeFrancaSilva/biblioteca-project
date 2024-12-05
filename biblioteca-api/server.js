@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
+const Book = require('./models/Book');
  
 const userRoutes = require('./routes/userRoutes');  // Importando as rotas de usuários
 const bookRoutes = require('./routes/bookRoutes');  // Certifique-se de que o caminho está correto
@@ -79,7 +80,7 @@ app.post('/api/livros', upload, async (req, res) => {
     });
  
     // Salvar o livro no banco de dados
-    await newBook.save();
+    await newBook.save(); // Salva o novo livro no banco
     res.status(201).json(newBook); // Retorna o livro criado
  
   } catch (error) {
@@ -87,6 +88,17 @@ app.post('/api/livros', upload, async (req, res) => {
     res.status(500).json({ message: 'Erro ao criar livro', error });
   }
 });
+
+// Exemplo de rota no servidor
+app.get('/api/livros/count', async (req, res) => {
+  try {
+    const count = await Book.countDocuments();
+    res.json({ count });
+  } catch (err) {
+    res.status(500).send("Erro ao obter contagem de livros");
+  }
+});
+
  
 // Definir a porta do servidor
 app.listen(5000, () => {
