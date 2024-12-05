@@ -70,20 +70,28 @@
           </ul>
         </div>
         <div class="task-list">Checklist de Tarefas</div>
-        <div class="calendar">
+        <!-- Calendário -->
+         <div class="calendar">
           <div class="calendar-header">
             <img src="@/assets/left-arrow.png" @click="previousMonth" alt="Mês Anterior" />
             <h3>{{ currentMonthName }} {{ currentYear }}</h3>
             <img src="@/assets/right-arrow.png" @click="nextMonth" alt="Próximo Mês" />
           </div>
           <div class="calendar-grid">
-            <div class="calendar-day" v-for="day in daysInMonth" :key="day.date" @click="markDay(day)">
-              <span :class="{ marked: day.marked }">{{ day.date.getDate() }}</span>
-            </div>
+            <div class="calendar-day" v-for="day in daysInMonth" :key="day.date" @click="markDay(day)"
+            :class="{'selected': selectedDay && selectedDay.date.toISOString().split('T')[0] === day.date.toISOString().split('T')[0]}">
+            <span :class="{ marked: day.marked }">{{ day.date.getDate() }}</span>
+          </div>
+        </div>
+
+
+          <!-- Anotação do Dia -->
+           <div v-if="selectedDay" class="annotation-container">
+            <textarea v-model="selectedDay.annotation" placeholder="Adicione uma anotação..." rows="4" cols="50"></textarea>
+            <button @click="saveAnnotation">Salvar Anotação</button>
           </div>
         </div>
       </div>
-
     </div>
 
     <!-- Rodapé -->
@@ -125,6 +133,8 @@ export default {
       currentMonth: new Date().getMonth(), // Mês atual
       currentYear: new Date().getFullYear(), // Ano atual
       daysInMonth: [], // Armazena os dias do mês
+      selectedDay: null, // Armazena o dia selecionado
+      isClickedInsideCalendar: false, // Variável para verificar se o clique foi dentro do calendário
     };
   },
   computed: {
@@ -167,12 +177,57 @@ export default {
       this.daysInMonth = [];
       const daysInMonth = new Date(this.currentYear, this.currentMonth + 1, 0).getDate();
       for (let day = 1; day <= daysInMonth; day++) {
+        const date = new Date(this.currentYear, this.currentMonth, day);
+        const annotation = this.getAnnotation(date); // Obtém a anotação salva, se houver
+        
         this.daysInMonth.push({
-          date: new Date(this.currentYear, this.currentMonth, day),
-          marked: false, // Define se o dia está marcado
-        });
-      }
+          date: date,
+          marked: annotation ? true : false, // Marca o dia apenas se houver anotação
+          annotation: annotation || '', // Se não houver anotação, coloca string vazia
+          });
+        }
+      },
+
+
+    // Carrega a anotação do dia (simulando com LocalStorage por enquanto)
+    getAnnotation(date) {
+      const dateString = date.toISOString().split('T')[0]; // Formata a data para string (YYYY-MM-DD)
+      return localStorage.getItem(dateString) || ''; // Retorna a anotação salva ou uma string vazia
     },
+
+    // Marca ou desmarca o dia dependendo da anotação
+    markDay(day) {
+      this.selectedDay = day;
+      
+      // Se o dia tem anotação, marca o dia
+      if (this.selectedDay.annotation) {
+        day.marked = true;
+      } else {
+        // Se não há anotação, desmarca o dia
+        day.marked = false;
+      }
+
+      // Destaca o dia selecionado com uma cor diferente
+      this.selectedDay.highlighted = true; // Marca o dia como destacado
+      this.isClickedInsideCalendar = true; // Marca como clique dentro do calendário
+    },
+
+
+    // Salva ou remove anotação no LocalStorage
+    saveAnnotation() {
+      const dateString = this.selectedDay.date.toISOString().split('T')[0];
+
+      // Se a anotação estiver vazia, removemos a marcação
+      if (!this.selectedDay.annotation) {
+        localStorage.removeItem(dateString); // Remover do LocalStorage
+        this.selectedDay.marked = false;  // Desmarca o dia
+        } else {
+          localStorage.setItem(dateString, this.selectedDay.annotation); // Salva a anotação
+          this.selectedDay.marked = true;  // Marca o dia
+          }
+          
+          alert('Anotação salva!');
+        },
 
     // Navega para o mês anterior no calendário
     previousMonth() {
@@ -196,9 +251,13 @@ export default {
       this.loadDays();
     },
 
-    // Marca ou desmarca um dia no calendário
-    markDay(day) {
-      day.marked = !day.marked;
+    handleClickOutside(event) {
+      // Verifica se o clique foi fora da área do calendário e da anotação
+      const calendar = this.$el.querySelector('.calendar');
+      if (calendar && !calendar.contains(event.target)) {
+        this.selectedDay = null; // Reseta o dia selecionado
+        this.isClickedInsideCalendar = false;
+      }
     },
 
     // Navega para a página de formulário de livro
@@ -231,6 +290,10 @@ export default {
     setInterval(() => {
       this.fetchBookCount();
     }, 10000);
+    document.addEventListener('click', this.handleClickOutside); // Adiciona o evento de clique fora
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside); // Remove o evento de clique fora
   },
 };
 </script>
@@ -488,6 +551,62 @@ body, html {
 .calendar-header img {
   width: 20px;
   height: auto;
+}
+
+/* Anotações */
+
+@media (max-width: 768px) {
+  .annotation-container {
+    max-width: 100%; /* A caixa ocupa 100% da largura disponível em telas menores */
+  }
+}
+
+/* Estilo geral do container das anotações */
+.annotation-container {
+  margin-top: 20px; /* Adiciona uma margem superior de 20 pixels para separar o container de outros elementos acima dele */
+  background-color: #f9f9f9; /* Define a cor de fundo do container para um cinza claro (próximo ao branco) */
+  padding: 15px; /* Aplica um preenchimento de 15 pixels em todos os lados dentro do container, criando espaço ao redor do conteúdo */
+  border: 1px solid #ddd; /* Adiciona uma borda fina de 1 pixel com cor cinza claro (#ddd) */
+  border-radius: 8px; /* Arredonda os cantos do container com um raio de 8 pixels, dando um visual mais suave */
+  width: 100%; /* O container ocupa 100% da largura disponível (responsivo) */
+  max-width: 90%; /* Limita a largura máxima do container a 500 pixels, evitando que ele fique muito largo em telas grandes */
+  box-sizing: border-box; /* Assegura que o padding não ultrapasse o limite */
+  text-align: center; /* Centraliza o texto dentro do container */
+}
+
+/* Estilo do campo de texto (textarea) dentro do container de anotações */
+.annotation-container textarea {
+  width: 100%; /* O campo de texto ocupa toda a largura disponível dentro do container */
+  max-width: 100%; /* Garante que o campo de texto não ultrapasse a largura do container */
+  border: 1px solid #ccc; /* Define uma borda fina de 1 pixel com cor cinza claro (#ccc) */
+  border-radius: 4px; /* Arredonda os cantos do campo de texto com um raio de 4 pixels */
+  padding: 10px; /* Adiciona 10 pixels de preenchimento dentro do campo de texto, separando o texto da borda */
+  font-size: 14px; /* Define o tamanho da fonte do texto dentro do campo de texto como 14 pixels */
+  box-sizing: border-box; /* Inclui o padding e a borda no cálculo da largura total */
+  overflow: auto; /* Adiciona barras de rolagem se o conteúdo for maior que o espaço disponível */
+}
+
+/* Estilo do botão dentro do container de anotações */
+.annotation-container button {
+  background-color: #4CAF50; /* Define a cor de fundo do botão como verde (HEX: #4CAF50) */
+  color: white; /* Define a cor do texto dentro do botão como branco */
+  border: none; /* Remove qualquer borda padrão do botão */
+  padding: 10px; /* Adiciona 10 pixels de preenchimento dentro do botão, dando mais área clicável */
+  margin-top: 10px; /* Adiciona uma margem superior de 10 pixels, separando o botão do campo de texto */
+  border-radius: 5px; /* Arredonda os cantos do botão com um raio de 5 pixels, dando um visual mais suave */
+  cursor: pointer; /* Altera o cursor para uma mão (pointer) quando o usuário passa o mouse sobre o botão, indicando que é clicável */
+}
+
+/* Estilo do botão quando o usuário passa o mouse sobre ele (efeito de hover) */
+.annotation-container button:hover {
+  background-color: #45a049; /* Quando o mouse está sobre o botão, altera a cor de fundo para um verde mais escuro (#45a049), criando um efeito de interação */
+}
+
+
+/* Destacar o dia selecionado */
+.calendar-day.selected {
+  background-color: #FF9800; /* Cor laranja para destacar o dia selecionado */
+  color: white;
 }
 
 /* Rodapé */
