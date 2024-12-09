@@ -60,78 +60,96 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from 'axios'; // Importa a biblioteca axios para realizar requisições HTTP
 
 export default {
-  name: 'RegisterPage',
+  name: 'RegisterPage', // Nome do componente Vue.js
+
+  // A função data() retorna o estado do componente, ou seja, as variáveis que armazenam informações
   data() {
     return {
-      name: '',
-      email: '',
-      userType: '',
-      nif: '',
-      rm: '',
-      phone: '',
-      password: '',
-      confirmPassword: '',
-      errorMessage: ''
+      name: '', // Armazena o nome do usuário
+      email: '', // Armazena o e-mail do usuário
+      userType: '', // Armazena o tipo de usuário (Aluno, Professor, Bibliotecário, etc.)
+      nif: '', // Armazena o NIF (número de identificação fiscal) - para professores e bibliotecários
+      rm: '', // Armazena o RM (registro do aluno) - para alunos
+      phone: '', // Armazena o número de telefone do usuário
+      password: '', // Armazena a senha do usuário
+      confirmPassword: '', // Armazena a confirmação da senha
+      errorMessage: '' // Armazena mensagens de erro que serão exibidas no frontend
     };
   },
+
+  // Métodos que podem ser utilizados no componente
   methods: {
+    // Método toggleFields (exibido com v-if no Vue) que pode ser usado para alternar campos dinamicamente
     toggleFields() {
-      // O Vue já cuida da exibição condicional com v-if
+      // O Vue já cuida da exibição condicional com v-if, portanto o método está vazio
     },
+
+    // Método para validar os campos e garantir que apenas números sejam inseridos em alguns campos
     validateInput(field) {
-      // Remove caracteres não numéricos
+      // Remove caracteres não numéricos dependendo do campo
       if (field === 'nif') {
-        this.nif = this.nif.replace(/\D/g, '');
+        this.nif = this.nif.replace(/\D/g, ''); // Remove qualquer caractere não numérico do campo 'nif'
       } else if (field === 'rm') {
-        this.rm = this.rm.replace(/\D/g, '');
+        this.rm = this.rm.replace(/\D/g, ''); // Remove qualquer caractere não numérico do campo 'rm'
       } else if (field === 'phone') {
-        this.phone = this.phone.replace(/\D/g, '');
+        this.phone = this.phone.replace(/\D/g, ''); // Remove qualquer caractere não numérico do campo 'phone'
       }
     },
+
+    // Método assíncrono para lidar com o registro do usuário
     async handleRegister() {
+      // Verifica se as senhas coincidem
       if (this.password !== this.confirmPassword) {
-        this.errorMessage = 'As senhas não coincidem.';
-        return; // Adiciona um return para evitar o fluxo continuado
+        this.errorMessage = 'As senhas não coincidem.'; // Exibe uma mensagem de erro caso as senhas não batam
+        return; // Interrompe a execução do código caso as senhas não coincidam
       }
 
+      // Limpa a mensagem de erro se as senhas coincidirem
       this.errorMessage = '';
 
-      // Remover campos desnecessários antes de enviar os dados
+      // Criação de um objeto com os dados do usuário a ser enviado para o backend
       let userData = {
-        name: this.name,
-        email: this.email,
-        userType: this.userType,
-        phone: this.phone,
-        password: this.password,
+        name: this.name, // Nome do usuário
+        email: this.email, // E-mail do usuário
+        userType: this.userType, // Tipo de usuário (Aluno, Professor, Bibliotecário)
+        phone: this.phone, // Telefone do usuário
+        password: this.password, // Senha do usuário
       };
 
-      // Verificar tipo de usuário e incluir o campo correto
+      // Condicional para adicionar campos específicos para tipos de usuários diferentes
       if (this.userType === 'Aluno') {
-        userData.rm = this.rm; // Apenas incluir o RM para alunos
+        userData.rm = this.rm; // Se for aluno, inclui o campo RM
       } else if (this.userType === 'Professor' || this.userType === 'Bibliotecário') {
-        userData.nif = this.nif; // Apenas incluir o NIF para professores e bibliotecários
+        userData.nif = this.nif; // Se for professor ou bibliotecário, inclui o campo NIF
       }
 
       try {
+        // Realiza uma requisição POST para a API para criar o usuário
         const response = await axios.post('http://localhost:5000/api/usuarios', userData);
 
-        // Redirecionar com base no tipo de usuário
-        const createdUser = response.data;
+        // Após o sucesso no cadastro, o usuário será redirecionado para uma página específica
+        const createdUser = response.data; // Recebe a resposta da API (dados do usuário criado)
+
+        // Verifica o tipo de usuário e direciona para a página apropriada
         if (createdUser.userType === 'Bibliotecário') {
-          this.$router.push('/dashboard');
+          this.$router.push('/adminPanel'); // Redireciona bibliotecário para o dashboard
         } else {
-          this.$router.push('/bookslist');
+          this.$router.push('/booksHome'); // Redireciona outros tipos de usuário para a lista de livros
         }
 
-        alert("Cadastro realizado com sucesso!");
+        alert("Cadastro realizado com sucesso!"); // Exibe um alerta de sucesso
       } catch (error) {
-        console.error(error);
+        // Caso haja erro, exibe uma mensagem de erro
+        console.error(error); // Exibe o erro no console para depuração
+
         if (error.response) {
+          // Se o erro vier da resposta da API, exibe a mensagem de erro retornada pela API
           this.errorMessage = error.response.data.message || 'Erro ao cadastrar, tente novamente.';
         } else {
+          // Caso não haja resposta da API, exibe uma mensagem genérica de erro
           this.errorMessage = 'Erro ao cadastrar, tente novamente.';
         }
       }
@@ -139,6 +157,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 /* Cabeçalho */
