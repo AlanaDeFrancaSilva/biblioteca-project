@@ -1,89 +1,86 @@
 <template>
-    <div class="container">
-      <!-- Cabeçalho -->
-      <header class="cabecalho">
-        <div class="logo">
-          <img src="@/assets/logo.png" alt="Logo Mange Library" />
-        </div>
-        <nav>
-          <ul>
-            <li><router-link to="/livros">Livros</router-link></li>
-            <li><router-link to="/noticias">Notícias</router-link></li>
-            <li><router-link to="/sobre">Sobre</router-link></li>
-            <li><a href="https://transparencia.sp.senai.br/sac" target="_blank">Fale Conosco</a></li>
-          </ul>
-        </nav>
-        
-        <!-- Barra de pesquisa e Perfil do usuário -->
-         <div class="cabecalho-direita">
-          <div class="barra-pesquisa">
-            <input type="text" placeholder="Pesquisar..." id="pesquisa-input" @keypress.enter="handleSearch" />
-          </div>
-          <div class="perfil-container" @click="toggleDropdown">
-            <div class="perfil-circulo"></div>
-            <div class="perfil-dropdown" v-if="showDropdown">
-              <ul>
-                <!-- Atualize a opção no dropdown do cabeçalho -->
-                <li @click="profile"><i class="icon-perfil"></i> Perfil</li>
-                <li><i class="icon-config"></i> Configurações</li>
-                <li @click="logout"><i class="icon-sair"></i> Sair</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </header>
-  
-      <!-- Conteúdo principal -->
-      <div class="conteudo-principal">
-        <!-- Filtros -->
-        <div class="filtros">
-          <div class="filtro1">
-            <h4>Mostrar Apenas</h4>
-            <label><input type="checkbox" value="Disponiveis" /> Livros Disponíveis</label>
-            <label><input type="checkbox" value="Mais Procurados" /> Mais Procurados</label>
-            <label><input type="checkbox" value="PDFs" /> PDFs</label>
-          </div>
-          <div class="filtro2">
-            <h4>Gênero</h4>
-            <label><input type="checkbox" value="Administracao" /> Administração</label>
-            <label><input type="checkbox" value="Artes" /> Artes</label>
-            <label><input type="checkbox" value="Computacao" /> Computação</label>
-            <label><input type="checkbox" value="Educacao" /> Educação</label>
-            <label><input type="checkbox" value="EsporteLazer" /> Esporte e Lazer</label>
-            <label><input type="checkbox" value="Fantasia" /> Fantasia, Horror e...</label>
-            <label><input type="checkbox" value="Infantil" /> Infantil</label>
-            <label><input type="checkbox" value="Romance" /> Romance</label>
-          </div>
-          <div class="filtro3">
-            <h4>Idioma</h4>
-            <label><input type="checkbox" name="idioma" value="Portugues" /> Português</label>
-            <label><input type="checkbox" name="idioma" value="Ingles" /> Inglês</label>
-            <label><input type="checkbox" name="idioma" value="Espanhol" /> Espanhol</label>
-            <label><input type="checkbox" name="idioma" value="Italiano" /> Italiano</label>
-          </div>
-        </div>
-  
-        <!-- Livros enfileirados -->
-        <section class="livros">
-          <div class="livro" v-for="(livro, index) in livros" :key="index">
-            <img :src="livro.imagem" :alt="livro.titulo" />
-            <div class="descricao">
-              <div class="avaliacao">{{ livro.avaliacao }}</div>
-              <div class="titulo">{{ livro.titulo }}</div>
-              <div class="autor">Autor: {{ livro.autor }}</div>
-              <div class="disponibilidade">Disponível: {{ livro.disponibilidade }}</div>
-            </div>
-          </div>
-        </section>
+  <div class="container">
+    <!-- Cabeçalho -->
+    <header class="cabecalho">
+      <div class="logo">
+        <img src="@/assets/logo.png" alt="Logo Mange Library" />
       </div>
-  
-      <!-- Propaganda -->
-      <section class="propaganda">
-        <img src="@/assets/propaganda.png" alt="Propaganda" />
+      <nav>
+        <ul>
+          <li><router-link to="/livros">Livros</router-link></li>
+          <li><router-link to="/noticias">Notícias</router-link></li>
+          <li><router-link to="/sobre">Sobre</router-link></li>
+          <li><a href="https://transparencia.sp.senai.br/sac" target="_blank">Fale Conosco</a></li>
+        </ul>
+      </nav>
+      <!-- Barra de pesquisa e Perfil do usuário -->
+      <div class="cabecalho-direita">
+        <div class="barra-pesquisa">
+          <input type="text" placeholder="Pesquisar..." id="pesquisa-input" @keypress.enter="handleSearch" />
+        </div>
+        <div class="perfil-container" @click="toggleDropdown">
+          <div class="perfil-circulo"></div>
+          <div class="perfil-dropdown" v-if="showDropdown">
+            <ul>
+              <li @click="profile"><i class="icon-perfil"></i> Perfil</li>
+              <li><i class="icon-config"></i> Configurações</li>
+              <li @click="logout"><i class="icon-sair"></i> Sair</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Conteúdo principal -->
+    <div class="conteudo-principal">
+      <!-- Filtros -->
+      <div class="filtros">
+        <div class="filtro1">
+          <h4>Mostrar Apenas</h4>
+          <label><input type="checkbox" value="Disponiveis" /> Livros Disponíveis</label>
+          <label><input type="checkbox" value="Mais Procurados" /> Mais Procurados</label>
+          <label><input type="checkbox" value="PDFs" /> PDFs</label>
+        </div>
+        <div class="filtro2">
+          <h4>Gênero</h4>
+          <label><input type="checkbox" value="Administracao" v-model="selectedGenres" /> Administração</label>
+          <label><input type="checkbox" value="Artes" v-model="selectedGenres" /> Artes</label>
+          <label><input type="checkbox" value="Computacao" v-model="selectedGenres" /> Computação</label>
+          <label><input type="checkbox" value="Educacao" v-model="selectedGenres" /> Educação</label>
+          <label><input type="checkbox" value="EsporteLazer" v-model="selectedGenres" /> Esporte e Lazer</label>
+          <label><input type="checkbox" value="Fantasia" v-model="selectedGenres" /> Fantasia, Horror e...</label>
+          <label><input type="checkbox" value="Infantil" v-model="selectedGenres" /> Infantil</label>
+          <label><input type="checkbox" value="Romance" v-model="selectedGenres" /> Romance</label>
+        </div>
+        <div class="filtro3">
+          <h4>Idioma</h4>
+          <label><input type="checkbox" name="idioma" value="Portugues" /> Português</label>
+          <label><input type="checkbox" name="idioma" value="Ingles" /> Inglês</label>
+          <label><input type="checkbox" name="idioma" value="Espanhol" /> Espanhol</label>
+          <label><input type="checkbox" name="idioma" value="Italiano" /> Italiano</label>
+        </div>
+      </div>
+
+      <!-- Livros enfileirados -->
+      <section class="livros">
+        <div class="livro" v-for="(livro, index) in filteredBooks" :key="index">
+          <img :src="livro.image ? `http://localhost:5000${livro.image}` : ''" :alt="livro.title" />
+          <div class="descricao">
+            <star-rating 
+            :rating="livro.rating || 0" 
+            :totalStars="5" 
+            @update:rating="updateRating(livro, $event)" 
+            />            
+            <div class="titulo">{{ livro.title }}</div>
+            <div class="autor">Autor: {{ livro.author }}</div>
+            <div class="disponibilidade">Disponível: {{ livro.available ? 'Sim' : 'Não' }}</div>
+          </div>
+        </div>
       </section>
-  
-      <!-- Rodapé -->
-      <footer>
+    </div>
+
+    <!-- Rodapé -->
+    <footer>
         <div class="footer-esquerda">
           <img src="@/assets/mundo.png" alt="Português (Brasil)" />
           <p>Português (Brasil)</p>
@@ -108,177 +105,129 @@
       </footer>
     </div>
   </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        livros: [
-          {
-            imagem: require('@/assets/livro1.png'),
-            avaliacao: "★★★★☆",
-            titulo: "É assim que acaba",
-            autor: "Autor 1",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro2.png'),
-            avaliacao: "★★★★★",
-            titulo: "Café com Deus Pai",
-            autor: "Antonio Cirilo",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro3.png'),
-            avaliacao: "★★★★☆",
-            titulo: "Me Poupe! (Edição atualizada)",
-            autor: "Nathalia Arcuri",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro4.png'),
-            avaliacao: "★★★★★",
-            titulo: "Veríty",
-            autor: "Colleen Hoover",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro5.png'),
-            avaliacao: "★★★★☆",
-            titulo: "O Homem Mais Rico da Babilônia",
-            autor: "George S. Clason",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro6.png'),
-            avaliacao: "★★★★☆",
-            titulo: "O Poder do Hábito: Por Que Fazemos o Que Fazemos na Vida e nos Negócios",
-            autor: "Charles Duhigg",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro7.png'),
-            avaliacao: "★★★★☆",
-            titulo: "Mindset: A nova psicologia do sucesso",
-            autor: "Carol S. Dweck",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro8.png'),
-            avaliacao: "★★★★★",
-            titulo: "A Psicologia Financeira",
-            autor: "Morgan Housel",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro9.png'),
-            avaliacao: "★★☆☆☆",
-            titulo: "Os Segredos da Mente Milionária",
-            autor: "T. Harv Eker",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro10.png'),
-            avaliacao: "★★★★☆",
-            titulo: "A geração ansiosa",
-            autor: "Jonathan Haidt",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro11.png'),
-            avaliacao: "★★★★☆",
-            titulo: "É assim que começa",
-            autor: "Colleen Hoover",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro12.png'),
-            avaliacao: "★★★★☆",
-            titulo: "Princípios milenares",
-            autor: "Tiago Brunet",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro13.png'),
-            avaliacao: "★★★★☆",
-            titulo: "A biblioteca da meia-noite",
-            autor: "Matt Haig",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro14.png'),
-            avaliacao: "★★★★★",
-            titulo: "Corte de chamas prateadas",
-            autor: "Sarah J. Maas",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro15.png'),
-            avaliacao: "★★★★☆",
-            titulo: "Introdução à Programação com Python",
-            autor: "Nilo Ney",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro16.png'),
-            avaliacao: "★★★☆☆",
-            titulo: "Desinformação",
-            autor: "Dan Ariely",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro17.png'),
-            avaliacao: "★★★★★",
-            titulo: "A guerra dos chips: A batalha pela tecnologia que move o mundo",
-            autor: "Chris Miller",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro18.png'),
-            avaliacao: "★★☆☆☆",
-            titulo: "O medo do medo",
-            autor: "Amy Cuddy",
-            disponibilidade: "Não",
-          },
-          {
-            imagem: require('@/assets/livro19.png'),
-            avaliacao: "★★★★☆",
-            titulo: "O poder da ação",
-            autor: "Paulo Vieira",
-            disponibilidade: "Sim",
-          },
-          {
-            imagem: require('@/assets/livro20.png'),
-            avaliacao: "★★★★☆",
-            titulo: "Eleanor Oliphant está perfeitamente bem",
-            autor: "Gail Honeyman",
-            disponibilidade: "Não",
-          },
-        ],
-        showDropdown: false,
-      pesquisa: "", // Adicionei pesquisa como uma variável data se for necessário
+
+<script>
+import api from '@/services/api'; // Certifique-se de que o serviço da API está correto
+// Importando o componente de estrelas
+import StarRating from '@/components/pages/StarRating.vue';
+
+export default {
+  data() {
+    return {
+      books: [],
+      selectedGenres: [], // Gêneros selecionados
+      showDropdown: false,
+      isLoading: false,
+      errorMessage: '',
+      available: false, // Filtro para 'Livros Disponíveis'
+      mostPopular: false, // Filtro para 'Mais Procurados'
+      pdfs: false, // Filtro para 'PDFs'
     };
   },
+
+  components: {
+    StarRating,
+  },
+
+  computed: {
+  filteredBooks() {
+    let filtered = this.books;
+
+    // Filtro de gênero
+    if (this.selectedGenres.length > 0) {
+      filtered = filtered.filter((livro) => {
+        return livro.genre && this.selectedGenres.some(genre => livro.genre.includes(genre));      });
+    }
+
+    // Filtro de livros disponíveis
+    if (this.available) {
+      filtered = filtered.filter((livro) => livro.available);
+    }
+
+    // Filtro de mais procurados
+    if (this.mostPopular) {
+      filtered = filtered.filter((livro) => livro.popularity > 0); // Ajuste conforme a lógica
+    }
+
+    // Filtro de PDFs
+    if (this.pdfs) {
+      filtered = filtered.filter((livro) => livro.isPdf); // Ajuste conforme sua lógica
+    }
+
+    return filtered;
+  }
+},
+
   methods: {
-  toggleDropdown() {
-    this.showDropdown = !this.showDropdown;
+    async fetchBooks() {
+      this.isLoading = true;
+      this.errorMessage = ''; // Reseta a mensagem de erro
+      try {
+        const response = await api.getBooks(); // Método para pegar os livros da API
+        this.books = response.data;
+        console.log(this.books); // Verifique a estrutura dos livros
+        // Verifique se o rating está presente em todos os livros
+        this.books.forEach(book => {
+          console.log(`Rating for ${book.title}:`, book.rating);
+        });
+      } catch (error) {
+        this.errorMessage = 'Erro ao carregar livros. Tente novamente mais tarde.';
+        console.error(error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+
+    async updateRating(livro, newRating) {
+      try {
+        await api.updateBookRating(livro.id, newRating); // Assuming you have an API for this
+        livro.rating = newRating;
+      } catch (error) {
+        console.error('Error updating rating:', error);
+      }
+    },
+
+    handleSearch(event) {
+      // Lógica para lidar com a pesquisa (implementação simples)
+      const query = event.target.value.toLowerCase();
+      this.books = this.books.filter((book) =>
+        book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query)
+      );
+    },
+
+    toggleDropdown() {
+      this.showDropdown = !this.showDropdown;
+    },
+
+    profile() {
+      // Implementar navegação para a página de perfil
+      console.log('Acessando perfil...');
+    },
+
+    logout() {
+      // Lógica para logout do usuário
+      console.log('Logout realizado...');
+    },
   },
-  handleSearch() {
-    console.log("Pesquisa iniciada:", this.pesquisa);
+
+  mounted() {
+    this.fetchBooks(); // Carrega a lista de livros ao montar o componente
   },
-  profile() {
-    console.log("Redirecionando para a página de perfil..."); // Debug
-    this.$router.push('/perfil'); // Redireciona para a página de perfil
+
+  setRating(star) {
+    this.$emit('update:rating', star);
   },
-  logout() {
-    localStorage.removeItem('auth_token');
-    this.$router.push('/');
+
+  watch: {
+  rating(newRating) {
+    console.log('Atualização do rating:', newRating); // Verifique se o rating é alterado corretamente
   }
 }
+  
 };
 </script>
-  
-  <style scoped>
+
+<style scoped>
   * {
     margin: 0;
     padding: 0;
@@ -292,10 +241,32 @@ body {
     font-size: 14px; /* Reduzido de 16px para 14px */
 }
 
-/* Adiciona uma borda ao redor do Cabeçalho e do Rodapé */
+/* Cabeçalho e Rodapé */
 .cabecalho, footer {
     border: 1px solid #ddd; /* Cor da borda */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Sombra */
+}
+
+.cabecalho {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9; /* cor para o cabeçalho */
+    color: black; /* Cor do texto no cabeçalho */
+    padding: 15px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-size: 14px; /* Ajustado para um tamanho menor */
+}
+
+footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f9f9f9; /* cor fundo para o rodapé */
+    color: black;
+    padding: 15px 20px;
+    width: 100%;
+    clear: both; /* Adiciona essa linha para garantir que o rodapé fique abaixo do conteúdo */
 }
 
 /* Estilo do botão de login */
@@ -311,7 +282,6 @@ body {
     transition: background-color 0.3s;
     text-decoration: none; /* Remove a sublinhado do link */
 }
-
 
 /* Ajusta o botão Entrar para ficar mais escuro no hover */
 .btn-login:hover {
@@ -337,18 +307,6 @@ body {
     background-color: #C3201F; /* Cor de fundo mais escura */
 }
 
-/* Estilo do cabeçalho */
-.cabecalho {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f9f9f9; /* cor para o cabeçalho */
-    color: black; /* Cor do texto no cabeçalho */
-    padding: 15px 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    font-size: 14px; /* Ajustado para um tamanho menor */
-}
-
 /* Estilo da logo */
 .logo img {
     height: 40px; /* Aumenta a altura da logo */
@@ -359,18 +317,15 @@ nav {
     margin-left: 20px; /* Adiciona espaço entre logo e menu */
 }
 
-/* Estilo da lista de navegação */
 nav ul {
     display: flex; /* Exibe os itens em linha */
     list-style: none; /* Remove os marcadores padrão da lista */
 }
 
-/* Estilo dos itens da lista de navegação */
 nav ul li {
     margin-right: 30px; /* Aumenta o espaço à direita de cada item do menu */
 }
 
-/* Estilo dos links no menu */
 nav ul li a {
     color: black; /* Cor do texto do menu */
     text-decoration: none; /* Remove o sublinhado dos links */
@@ -378,7 +333,6 @@ nav ul li a {
     transition: color 0.3s; /* Transição suave para mudança de cor ao passar o mouse */
 }
 
-/* Efeito hover nos links do menu */
 nav ul li a:hover {
     color: #ecf0f1; /* Cor mais clara no hover */
 }
@@ -388,7 +342,6 @@ nav ul li a:hover {
     margin: 0 20px; /* Espaço em volta da barra de pesquisa */
 }
 
-/* Estilo do input da barra de pesquisa */
 .barra-pesquisa input {
     padding: 8px; /* Ajustado para diminuir o padding */
     border: 1px solid #ddd; /* Borda da barra de pesquisa */
@@ -398,13 +351,11 @@ nav ul li a:hover {
     transition: border-color 0.3s; /* Efeito de transição */
 }
 
-/* Efeito ao focar no input da barra de pesquisa */
 .barra-pesquisa input:focus {
     border-color: #F4271C; /* Cor da borda ao focar */
     outline: none; /* Remove o contorno padrão do navegador */
 }
 
-/* Efeito hover do botão de pesquisar */
 .btn-pesquisar:hover {
     background-color: #C3201F; /* Cor do botão no hover */
 }
@@ -415,25 +366,10 @@ nav ul li a:hover {
     align-items: center; /* Alinha os botões verticalmente ao centro */
 }
 
-/* Cabeçalho */
-.cabecalho {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    background-color: #f9f9f9;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-}
-
 /* Estilização para o conteúdo do lado direito do cabeçalho */
 .cabecalho-direita {
     display: flex;
     align-items: center;
-}
-
-/* Barra de pesquisa */
-.barra-pesquisa {
-    margin-right: 20px;
 }
 
 /* Estilização do perfil */
@@ -487,14 +423,7 @@ nav ul li a:hover {
     margin: 0 auto; /* Centraliza a propaganda */
 }
 
-/* Linha divisória */
-hr {
-    width: 85%; /* Define a largura da linha */
-    margin: 20px auto; /* Centraliza horizontalmente */
-    border: 1px solid #ddd; /* Define a cor e espessura da linha */
-}
-
-/* Livros enfileirados */
+/* Livros */
 .livros {
     display: flex;
     justify-content: space-between; /* Garante espaço entre os livros */
@@ -537,62 +466,22 @@ hr {
     color: #555;
 }
 
-/*Botão para se cadastrar p/ +*/
-
-/* Estilização do contêiner para centralizar */
-.container-cadastre {
-    display: flex;
-    flex-direction: column; /* Para garantir que o botão fique no centro mesmo se o espaço mudar */
-    justify-content: center; /* Centraliza verticalmente */
-    align-items: center;     /* Centraliza horizontalmente */
-    margin-bottom: 10px; /* Ajuste para dar espaço ao rodapé */
+/* Barra de pesquisa */
+.barra-pesquisa input {
+  padding: 8px;
+  width: 200px;
+  margin-right: 20px;
 }
-
-/* Botão para se cadastrar p/ + */
-.btn-cadastre-mais {
-    background-color: #F4271C;
-    color: #ffffff;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 12px; /* Reduzir o padding */
-    cursor: pointer;
-    font-size: 14px;
-    transition: background-color 0.3s;
-    margin: 0 auto; /* Diminui o espaço ao redor do botão */
-    text-decoration: none; /* Remove a sublinhado do link */
-}
-
-.btn-cadastre-mais:hover {
-    background-color: #C3201F;
-}
-
 
 /* Rodapé */
-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f9f9f9; /* cor fundo para o rodapé */
-    color: black;
-    padding: 15px 20px;
-    width: 100%;
-    clear: both; /* Adiciona essa linha para garantir que o rodapé fique abaixo do conteúdo */
-}
-
-/* Adiciona essa classe ao elemento que contém o conteúdo da página */
-.container {
-    min-height: 100vh; /* Ajusta a altura mínima do conteúdo para a altura da página */
-    margin-bottom: 60px; /* Adiciona um espaçamento de 60px no final do conteúdo para o rodapé */
-}
-
 .footer-esquerda {
     display: flex;
     align-items: center;
 }
 
 .footer-esquerda img {
-    height: 20px; /* Define a altura das imagens para 25 pixels, garantindo uma aparência consistente */
-    margin-right: 10px; /* Adiciona uma margem de 10 pixels à direita das imagens para espaçamento entre elementos */
+    height: 20px; /* Define a altura das imagens para 25 pixels */
+    margin-right: 10px; /* Adiciona uma margem de 10 pixels à direita das imagens */
 }
 
 .footer-centro {
@@ -600,34 +489,31 @@ footer {
     flex-grow: 1;
 }
 
-/* Define a largura da .footer-direita */
 .footer-direita {
     display: flex;
     justify-content: space-around;
-    width: 110px; /* Mantém a largura da .footer-direita em 100px */
-    gap: 0.5px; /* Adiciona um espaçamento de 10px entre as imagens */
-    overflow: visible; /* Define como o conteúdo deve ser tratado quando ultrapassa a largura da página */
+    width: 110px; /* Largura da .footer-direita */
+    gap: 0.5px; /* Espaçamento de 5px entre as imagens */
+    overflow: visible; /* Como o conteúdo deve ser tratado quando ultrapassa a largura da página */
 }
 
-/* Define o estilo para as imagens dentro da .footer-direita */
 .footer-direita img {
     height: 20px; /* Define a altura das imagens */
     margin: 0 5px; /* Adiciona um espaçamento de 5px à esquerda e à direita das imagens */
 }
 
-
-/* Estilos para a estrutura principal */
+/* Estrutura Principal */
 .conteudo-principal {
     display: flex; /* Flexbox para organizar os filtros e a lista de livros */
     justify-content: flex-start; /* Alinha os itens no início */
 }
 
-/* Estilos para o contêiner de filtros */
+/* Contêiner de filtros */
 .filtros {
-    width: 10%; /* Largura dos filtros */
+    width: 25%; /* Largura dos filtros */
     padding: 0; /* Remover padding interno */
-    margin-right: 10px; /*  o espaço à direita */
-    margin-top: 20px; /*  espaço acima dos filtros */
+    margin-right: 10px; /* Espaço à direita */
+    margin-top: 20px; /* Espaço acima dos filtros */
     margin-left: 20px; /* Adiciona espaço à esquerda dos filtros */
     display: flex;
     flex-direction: column; /* Filtros empilhados verticalmente */
@@ -635,7 +521,6 @@ footer {
     gap: 10px; /* Espaço entre os filtros */
 }
 
-/* Estilos para cada filtro individual */
 .filtros > div {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra para os filtros */
     border: 1px solid #ddd; /* Borda individual */
@@ -651,13 +536,20 @@ label {
     text-align: left; /* Alinha o texto à esquerda */
 }
 
-/* Estilos para a lista de livros */
-.livros {
-    flex: 1; /* O restante do espaço é ocupado pela lista de livros */
-    display: flex;
-    flex-wrap: wrap; /* Permite que os livros se ajustem à linha */
-    gap: 10px; /* Espaçamento entre os livros */
+/*star*/
+.star-rating {
+  font-size: 30px; /* Ajuste o tamanho das estrelas */
+  cursor: pointer;
+  display: flex; /* Para alinhar as estrelas na mesma linha */
+  justify-content: center; /* Centraliza as estrelas */
 }
 
-  </style>
-  
+.star {
+  color: #ccc;
+  transition: color 0.3s;
+}
+
+.star.filled {
+  color: #f5a623;
+}
+</style>

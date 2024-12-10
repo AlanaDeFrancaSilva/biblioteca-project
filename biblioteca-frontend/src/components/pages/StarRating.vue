@@ -14,13 +14,18 @@
   </template> 
   
   <script> 
-  export default { 
-    props: { 
-      rating: { 
-        type: Number, 
-        default: 0, 
-      }, 
-    }, 
+  export default {
+    name: 'StarRating',
+    props: {
+      rating: {
+        type: Number,
+        required: true
+      },
+      totalStars: {
+        type: Number,
+        required: true
+      }
+    },
   
     methods: { 
       // Método para definir a avaliação ao clicar na estrela

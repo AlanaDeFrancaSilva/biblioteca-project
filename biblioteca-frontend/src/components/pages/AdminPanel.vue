@@ -305,6 +305,11 @@ export default {
       this.$router.push('/bookForm'); // Navega para a página /book-form
     },
 
+    // Método para redirecionar ao perfil do usuário
+    profile() {
+      this.$router.push('/PerfilPage');
+    },
+
     // Método para realizar o logout
     logout() {
       // Limpar o armazenamento local ou de sessão, caso você tenha um token de login armazenado
@@ -312,11 +317,6 @@ export default {
 
       // Depois de limpar os dados de sessão, redireciona para a página inicial
       this.$router.push('/'); // Redireciona para a HomePage
-    },
-
-    // Método para redirecionar ao perfil do usuário
-    profile() {
-      this.$router.push('/PerfilPage');
     }
   },
   mounted() {
