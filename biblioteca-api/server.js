@@ -151,6 +151,35 @@ app.get('/api/livros/genres', async (req, res) => {
   }
 });
 
+// Rota para obter empréstimos por gênero
+app.get('/api/emprestimos/por-genero', async (req, res) => {
+  try {
+    // Obtemos todos os empréstimos
+    const loans = await Loan.find().populate('bookId');
+
+    // Agrupa os empréstimos por gênero
+    const genresCount = {};
+    for (const loan of loans) {
+      const book = loan.bookId; // Recupera o livro do empréstimo
+      const genre = book.genre; // Acessa o gênero do livro
+
+      if (genre) {
+        // Conta os empréstimos por gênero
+        genresCount[genre] = (genresCount[genre] || 0) + 1;
+      }
+    }
+
+    // Prepara os dados de resposta
+    const genres = Object.keys(genresCount);
+    const count = genres.map(genre => genresCount[genre]);
+
+    res.status(200).json({ genres, count });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao obter dados de empréstimos por gênero', error });
+  }
+});
+
+
 // Definir a porta do servidor
 app.listen(5000, () => {
   console.log("Servidor rodando na porta 5000");

@@ -154,6 +154,8 @@ export default {
       isClickedInsideCalendar: false, // Variável para verificar se o clique foi dentro do calendário
       genres: [], // Gêneros dos livros
       genreData: [], // Contagem dos livros por gênero
+      borrowedData: [], // Contagem de livros emprestados por gênero
+      borrowedGenres: [], // Gêneros de livros emprestados
     };
   },
   computed: {
@@ -200,6 +202,25 @@ export default {
       }
     },
 
+    async fetchBorrowedData() {
+      try {
+        const response = await fetch('http://localhost:5000/api/emprestimos/por-genero'); // Nova rota para empréstimos por gênero
+        const data = await response.json();
+        
+        if (data && data.genres) {
+          this.borrowedGenres = data.genres; // Gêneros dos livros emprestados
+          this.borrowedData = data.count; // Contagem dos empréstimos por gênero
+          console.log(this.borrowedGenres, this.borrowedData); // Verifique os dados
+          this.renderChart(); // Atualiza o gráfico
+        } else {
+          console.error('Dados de empréstimos por gênero não encontrados');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados de empréstimos por gênero:', error);
+      }
+    },
+
+
     // Método para renderizar o gráfico
     renderChart() {
       const ctx = document.getElementById('genreChart').getContext('2d');
@@ -213,18 +234,26 @@ export default {
             backgroundColor: 'rgba(75, 192, 192, 0.2)', // Cor de fundo
             borderColor: 'rgba(75, 192, 192, 1)', // Cor da borda
             borderWidth: 1
-          }]
-        },
-        options: {
-          responsive: true,
-          scales: {
-            y: {
-              beginAtZero: true
-            }
           },
-          plugins: {
-            legend: {
-              position: 'bottom',  // Coloca a legenda abaixo do gráfico
+          {
+          label: 'Gêneros Emprestados',  // Nova legenda
+          data: this.borrowedData,  // Dados dos gêneros emprestados
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',  // Cor de fundo para os dados emprestados
+          borderColor: 'rgba(153, 102, 255, 1)',  // Cor da borda para os dados emprestados
+          borderWidth: 1,
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',  // Coloca a legenda abaixo do gráfico
         }
       }
     }
@@ -388,6 +417,9 @@ export default {
     
     // Chama o método para obter a contagem de livros
     this.fetchBookCount();
+
+    // Chama a função para pegar os dados de gêneros emprestados
+    this.fetchBorrowedData();
     
     // Atualiza a contagem de livros a cada 10 segundos
     setInterval(() => {
