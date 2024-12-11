@@ -55,7 +55,7 @@
           <h3>Livros</h3>
           <p>{{ bookCount }} unidades</p>
         </div>
-        <div class="chart">
+        <div class="chart">Distribuição de Livros por Gênero
         <canvas id="genreChart"></canvas>
       </div>
         <div class="popular-books">
@@ -221,10 +221,15 @@ export default {
             y: {
               beginAtZero: true
             }
-          }
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',  // Coloca a legenda abaixo do gráfico
         }
-      });
-    },
+      }
+    }
+    });
+  },
 
     // Alterna a visibilidade do dropdown de perfil
     toggleDropdown() {
@@ -446,7 +451,7 @@ body, html {
 .title {
   font-family: 'Noto Sans', sans-serif; /* Aplica a fonte Noto Sans */
   font-size: 15px; /* Tamanho da fonte ajustado */
-  font-weight: bold;
+  font-weight: bold; /* Deixa o texto em negrito */
   margin-left: 0px;
 }
 
