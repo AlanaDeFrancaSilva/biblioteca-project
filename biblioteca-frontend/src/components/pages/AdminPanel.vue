@@ -55,7 +55,9 @@
           <h3>Livros</h3>
           <p>{{ bookCount }} unidades</p>
         </div>
-        <div class="chart">Gráfico de livros</div>
+        <div class="chart">
+        <canvas id="genreChart"></canvas>
+      </div>
         <div class="popular-books">
           <h3>Livros Mais Procurados</h3>
           <ul>
@@ -134,6 +136,10 @@
 
 <script>
 //import axios from "axios";  // Importe o axios
+import { Chart, registerables } from 'chart.js';
+
+// Registra todos os componentes necessários
+Chart.register(...registerables);
 
 export default {
   data() {
@@ -146,6 +152,8 @@ export default {
       daysInMonth: [], // Armazena os dias do mês
       selectedDay: null, // Armazena o dia selecionado
       isClickedInsideCalendar: false, // Variável para verificar se o clique foi dentro do calendário
+      genres: [], // Gêneros dos livros
+      genreData: [], // Contagem dos livros por gênero
     };
   },
   computed: {
@@ -171,6 +179,51 @@ export default {
       } catch (error) {
           console.error("Erro ao buscar contagem de livros:", error);
       }
+    },
+
+    // Método para buscar os livros e agrupar por gênero
+    async fetchGenreData() {
+      try {
+        const response = await fetch('http://localhost:5000/api/livros/genres'); // API que retorna dados agrupados por gênero
+        const data = await response.json();
+        
+        if (data && data.genres) {
+          this.genres = data.genres.map(item => item.genre); // Gêneros
+          this.genreData = data.genres.map(item => item.count); // Contagem de livros por gênero
+          console.log(this.genres, this.genreData); // Verifique os dados
+          this.renderChart(); // Atualiza o gráfico
+        } else {
+          console.error('Dados de gêneros não encontrados');
+        }
+      } catch (error) {
+        console.error('Erro ao buscar dados de gêneros:', error);
+      }
+    },
+
+    // Método para renderizar o gráfico
+    renderChart() {
+      const ctx = document.getElementById('genreChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: this.genres, // Labels dos gêneros
+          datasets: [{
+            label: 'Livros por Gênero',
+            data: this.genreData, // Dados da contagem
+            backgroundColor: 'rgba(75, 192, 192, 0.2)', // Cor de fundo
+            borderColor: 'rgba(75, 192, 192, 1)', // Cor da borda
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true
+            }
+          }
+        }
+      });
     },
 
     // Alterna a visibilidade do dropdown de perfil
@@ -336,6 +389,12 @@ export default {
       this.fetchBookCount();
     }, 10000);
     document.addEventListener('click', this.handleClickOutside); // Adiciona o evento de clique fora
+
+    // Gráfico
+    this.fetchGenreData(); // Busca os dados de gêneros assim que o componente for montado
+    setInterval(() => {
+      this.fetchGenreData(); // Atualiza os dados a cada 10 segundos
+    }, 10000);
   },
   beforeUnmount() {
     document.removeEventListener('click', this.handleClickOutside); // Remove o evento de clique fora

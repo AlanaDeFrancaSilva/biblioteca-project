@@ -126,7 +126,31 @@ app.post('/api/emprestimo', async (req, res) => {
     res.status(500).json({ message: 'Erro ao registrar empréstimo', error });
   }
 });
- 
+
+// Rota para obter a contagem de livros por gênero
+app.get('/api/livros/genres', async (req, res) => {
+  try {
+    const genres = await Book.aggregate([
+      {
+        $group: {
+          _id: '$genre', // Agrupa por gênero
+          count: { $sum: 1 } // Conta o número de livros por gênero
+        }
+      }
+    ]);
+
+    // Formatar a resposta para incluir 'genre' e 'count'
+    const formattedGenres = genres.map(item => ({
+      genre: item._id,
+      count: item.count
+    }));
+
+    res.json({ genres: formattedGenres });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao buscar dados de gêneros', error });
+  }
+});
+
 // Definir a porta do servidor
 app.listen(5000, () => {
   console.log("Servidor rodando na porta 5000");
