@@ -38,9 +38,9 @@
             <img src="@/assets/addition.png" alt="Novo livro">
             <p>Novo Livro</p>
           </div>
-          <div class="circle users">
-            <img src="@/assets/users.png" alt="Usuários">
-            <p>Usuários</p>
+          <div class="circle users" @click="goToLoan">
+            <img src="@/assets/users.png" alt="Empréstimos">
+            <p>Empréstimos</p>
           </div>
           <div class="circle reports">
             <img src="@/assets/report.png" alt="Relatórios">
@@ -303,6 +303,11 @@ export default {
     // Navega para a página de formulário de livro
     goToBookForm() {
       this.$router.push('/bookForm'); // Navega para a página /book-form
+    },
+
+    // Navega para a página de Emprestimo de livro
+    goToLoan() {
+      this.$router.push('/loan'); // Navega para a página /book-form
     },
 
     // Método para redirecionar ao perfil do usuário

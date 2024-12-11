@@ -4,6 +4,7 @@ const cors = require('cors');
 const multer = require('multer');
 const path = require('path');
 const Book = require('./models/Book');
+const Loan = require('./models/Loan'); // Importando o modelo de Empréstimo
  
 const userRoutes = require('./routes/userRoutes');  // Importando as rotas de usuários
 const bookRoutes = require('./routes/bookRoutes');  // Certifique-se de que o caminho está correto
@@ -99,6 +100,32 @@ app.get('/api/livros/count', async (req, res) => {
   }
 });
 
+// Rota POST para registrar um empréstimo
+app.post('/api/emprestimo', async (req, res) => {
+  const { bookId, userId, dueDate } = req.body;
+
+  if (!bookId || !userId || !dueDate) {
+    return res.status(400).json({ message: 'Campos obrigatórios ausentes' });
+  }
+
+  try {
+    // Criando um novo empréstimo
+    const novoEmprestimo = new Loan({
+      bookId,
+      userId,
+      dueDate
+    });
+
+    // Salvando o empréstimo no banco de dados
+    await novoEmprestimo.save();
+
+    // Respondendo com sucesso
+    res.status(201).json({ message: 'Empréstimo registrado com sucesso!' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Erro ao registrar empréstimo', error });
+  }
+});
  
 // Definir a porta do servidor
 app.listen(5000, () => {
