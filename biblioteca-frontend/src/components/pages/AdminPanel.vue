@@ -202,64 +202,43 @@ export default {
       }
     },
 
+    // Método para buscar os dados de empréstimos por gênero
     async fetchBorrowedData() {
       try {
-        const response = await fetch('http://localhost:5000/api/emprestimos/por-genero'); // Nova rota para empréstimos por gênero
+        // Faz a requisição para pegar os dados de empréstimos
+        const response = await fetch('http://localhost:5000/api/emprestimos/por-genero');
         const data = await response.json();
         
+        // Verifica se os dados retornaram corretamente
         if (data && data.genres) {
-          this.borrowedGenres = data.genres; // Gêneros dos livros emprestados
-          this.borrowedData = data.count; // Contagem dos empréstimos por gênero
-          console.log(this.borrowedGenres, this.borrowedData); // Verifique os dados
-          this.renderChart(); // Atualiza o gráfico
+          // Atribui os gêneros dos empréstimos
+          this.borrowedGenres = data.genres;
+          
+          // Mapeia os gêneros para garantir que todos os gêneros de livros tenham dados de empréstimos
+          this.borrowedData = this.borrowedGenres.map((genre) => {
+            // Encontra o índice do gênero no array de gêneros
+            const genreIndex = this.genres.indexOf(genre);
+            
+            // Se o gênero for encontrado, pega a contagem do gênero, caso contrário, atribui 0
+            return genreIndex !== -1 ? this.genreData[genreIndex] : 0;
+          });
+
+          console.log('Gêneros:', this.borrowedGenres);
+          console.log('Dados de Empréstimos:', this.borrowedData);
+          this.renderChart();  // Atualiza o gráfico
+          
+          // Atualiza o gráfico após consolidar os dados
+          this.renderChart();  
+       
         } else {
-          console.error('Dados de empréstimos por gênero não encontrados');
+      console.error('Dados de empréstimos por gênero não encontrados');
         }
       } catch (error) {
         console.error('Erro ao buscar dados de empréstimos por gênero:', error);
       }
     },
 
-
-    // Método para renderizar o gráfico
-    renderChart() {
-      const ctx = document.getElementById('genreChart').getContext('2d');
-      new Chart(ctx, {
-        type: 'bar',
-        data: {
-          labels: this.genres, // Labels dos gêneros
-          datasets: [{
-            label: 'Livros por Gênero',
-            data: this.genreData, // Dados da contagem
-            backgroundColor: 'rgba(75, 192, 192, 0.2)', // Cor de fundo
-            borderColor: 'rgba(75, 192, 192, 1)', // Cor da borda
-            borderWidth: 1
-          },
-          {
-          label: 'Gêneros Emprestados',  // Nova legenda
-          data: this.borrowedData,  // Dados dos gêneros emprestados
-          backgroundColor: 'rgba(153, 102, 255, 0.2)',  // Cor de fundo para os dados emprestados
-          borderColor: 'rgba(153, 102, 255, 1)',  // Cor da borda para os dados emprestados
-          borderWidth: 1,
-        }
-      ]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      },
-      plugins: {
-        legend: {
-          position: 'bottom',  // Coloca a legenda abaixo do gráfico
-        }
-      }
-    }
-    });
-  },
-
+    
     // Alterna a visibilidade do dropdown de perfil
     toggleDropdown() {
       this.showDropdown = !this.showDropdown;
@@ -285,6 +264,48 @@ export default {
           });
         }
       },
+
+      // Método para renderizar o gráfico
+renderChart() {
+  const ctx = document.getElementById('genreChart').getContext('2d');
+  
+  new Chart(ctx, {
+    type: 'bar',  // Tipo de gráfico
+    data: {
+      labels: this.genres, // Gêneros
+      datasets: [
+        {
+          label: 'Livros por Gênero', // Dataset para Livros por Gênero
+          data: this.genreData,  // Contagem de livros por gênero
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Cor de fundo para as barras
+          borderColor: 'rgba(75, 192, 192, 1)',  // Cor da borda das barras
+          borderWidth: 1  // Largura da borda
+        },
+        {
+          label: 'Gêneros Emprestados',  // Dataset para Gêneros Emprestados
+          data: this.borrowedData,  // Contagem de livros emprestados por gênero
+          backgroundColor: 'rgba(153, 102, 255, 0.2)',  // Cor de fundo para as barras
+          borderColor: 'rgba(153, 102, 255, 1)',  // Cor da borda das barras
+          borderWidth: 1  // Largura da borda
+        }
+      ]
+    },
+    options: {
+      responsive: true,  // Gráfico responsivo
+      scales: {
+        y: {
+          beginAtZero: true  // Garante que o eixo Y começa em zero
+        }
+      },
+      plugins: {
+        legend: {
+          position: 'bottom',  // Posição da legenda
+        }
+      }
+    }
+  });
+},
+
 
 
     // Carrega a anotação do dia, armazena múltiplas anotações
@@ -418,8 +439,9 @@ export default {
     // Chama o método para obter a contagem de livros
     this.fetchBookCount();
 
-    // Chama a função para pegar os dados de gêneros emprestados
-    this.fetchBorrowedData();
+    // Chama as funções para pegar os dados de gêneros e empréstimos
+    this.fetchGenreData(); // Busca os dados de gêneros
+    this.fetchBorrowedData(); // Busca os dados de empréstimos
     
     // Atualiza a contagem de livros a cada 10 segundos
     setInterval(() => {
@@ -431,6 +453,7 @@ export default {
     this.fetchGenreData(); // Busca os dados de gêneros assim que o componente for montado
     setInterval(() => {
       this.fetchGenreData(); // Atualiza os dados a cada 10 segundos
+      this.fetchBorrowedData(); // Atualiza os dados de empréstimos
     }, 10000);
   },
   beforeUnmount() {

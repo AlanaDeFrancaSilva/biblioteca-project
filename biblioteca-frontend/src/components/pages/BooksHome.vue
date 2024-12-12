@@ -43,12 +43,12 @@
         </div>
         <div class="filtro2">
           <h4>Gênero</h4>
-          <label><input type="checkbox" value="Administracao" v-model="selectedGenres" /> Administração</label>
+          <label><input type="checkbox" value="Administração" v-model="selectedGenres" /> Administração</label>
           <label><input type="checkbox" value="Artes" v-model="selectedGenres" /> Artes</label>
-          <label><input type="checkbox" value="Computacao" v-model="selectedGenres" /> Computação</label>
-          <label><input type="checkbox" value="Educacao" v-model="selectedGenres" /> Educação</label>
-          <label><input type="checkbox" value="EsporteLazer" v-model="selectedGenres" /> Esporte e Lazer</label>
-          <label><input type="checkbox" value="Fantasia" v-model="selectedGenres" /> Fantasia, Horror e...</label>
+          <label><input type="checkbox" value="Computação" v-model="selectedGenres" /> Computação</label>
+          <label><input type="checkbox" value="Educação" v-model="selectedGenres" /> Educação</label>
+          <label><input type="checkbox" value="Esporte e Lazer" v-model="selectedGenres" /> Esporte e Lazer</label>
+          <label><input type="checkbox" value="Fantasia, Horror e..." v-model="selectedGenres" /> Fantasia, Horror e...</label>
           <label><input type="checkbox" value="Infantil" v-model="selectedGenres" /> Infantil</label>
           <label><input type="checkbox" value="Romance" v-model="selectedGenres" /> Romance</label>
         </div>
@@ -136,23 +136,18 @@ export default {
     // Filtro de gênero
     if (this.selectedGenres.length > 0) {
       filtered = filtered.filter((livro) => {
-        return livro.genre && this.selectedGenres.some(genre => livro.genre.includes(genre));      });
+        if (Array.isArray(livro.genre)) {
+          // Caso livro.genre seja um array, verificar se algum gênero está presente
+          return this.selectedGenres.some(genre => livro.genre.includes(genre));
+        } else if (typeof livro.genre === 'string') {
+          // Caso livro.genre seja uma string simples, verificar se está na lista de selecionados
+          return this.selectedGenres.includes(livro.genre);
+        }
+        return false; // Caso livro.genre seja indefinido ou de outro tipo inesperado
+      });
     }
 
-    // Filtro de livros disponíveis
-    if (this.available) {
-      filtered = filtered.filter((livro) => livro.available);
-    }
-
-    // Filtro de mais procurados
-    if (this.mostPopular) {
-      filtered = filtered.filter((livro) => livro.popularity > 0); // Ajuste conforme a lógica
-    }
-
-    // Filtro de PDFs
-    if (this.pdfs) {
-      filtered = filtered.filter((livro) => livro.isPdf); // Ajuste conforme sua lógica
-    }
+    // Outros filtros podem ser adicionados aqui...
 
     return filtered;
   }
@@ -199,15 +194,19 @@ export default {
       this.showDropdown = !this.showDropdown;
     },
 
+    // Método para redirecionar ao perfil do usuário
     profile() {
-      // Implementar navegação para a página de perfil
-      console.log('Acessando perfil...');
+      this.$router.push('/PerfilPage');
     },
 
+    // Método para realizar o logout
     logout() {
-      // Lógica para logout do usuário
-      console.log('Logout realizado...');
-    },
+      // Limpar o armazenamento local ou de sessão, caso você tenha um token de login armazenado
+      localStorage.removeItem('auth_token');  // Se você estiver usando o localStorage
+
+      // Depois de limpar os dados de sessão, redireciona para a página inicial
+      this.$router.push('/'); // Redireciona para a HomePage
+    }
   },
 
   mounted() {

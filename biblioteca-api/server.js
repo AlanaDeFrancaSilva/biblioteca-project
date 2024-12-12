@@ -179,7 +179,6 @@ app.get('/api/emprestimos/por-genero', async (req, res) => {
   }
 });
 
-
 // Definir a porta do servidor
 app.listen(5000, () => {
   console.log("Servidor rodando na porta 5000");
